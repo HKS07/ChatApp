@@ -22,7 +22,7 @@ const SettingsLabel = ({children,title}) => {
 
 const SettingsSection = () => {
   return (
-    <div className="w-1/3 bg-customBlack text-white">
+    <div className="w-[446px] bg-customBlack text-white">
       <div className="text-2xl font-bold mx-5 my-2 py-2">Settings</div>
       <div className="flex px-1 py-2 mx-2 my-1 rounded-lg bg-customLightGray">
         <div className="mx-2 text-2xl text-customDarkWhite">
