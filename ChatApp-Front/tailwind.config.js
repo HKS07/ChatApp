@@ -13,7 +13,9 @@ export default {
         customDarkWhite: '#8696A0',
         customDarkWhite2: '#233138',
         customLightWhite: '#E9EDEF',
-        customGreen: '#025144'
+        customGreen: '#025144',
+        customGreen2: '#098069',
+        customGreen3: '#00A884'
       }
     },
   },
