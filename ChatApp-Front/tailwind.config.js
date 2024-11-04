@@ -11,6 +11,7 @@ export default {
         customLightGray: '#202C33',
         customBlack: '#111B21',
         customDarkWhite: '#8696A0',
+        customDarkWhite2: '#233138',
         customLightWhite: '#E9EDEF',
         customGreen: '#025144'
       }

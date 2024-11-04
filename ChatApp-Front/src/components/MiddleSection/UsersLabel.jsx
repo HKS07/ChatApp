@@ -1,7 +1,7 @@
 import { CgProfile } from "react-icons/cg";
 const UserLable = () => {
   return (
-    <div className="flex w-[95%]">
+    <div className="flex w-[95%] hover:bg-customDarkWhite2">
       <div className="text-4xl m-2 py-3">
         <CgProfile />
       </div>
