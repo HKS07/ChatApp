@@ -10,7 +10,7 @@ Welcome to ChatApp! This is a messaging application similar to WhatsApp, designe
 ## Getting Started
 
 To run ChatApp locally, follow these steps:
-Comming Soon...
+**Comming Soon...**
 
 ## License
 
