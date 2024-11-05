@@ -1,6 +1,6 @@
-import ChatSection from './MiddleSection/ChatSection'
-import ProfileSection from './MiddleSection/ProfileSection'
-import SettingsSection from './MiddleSection/SettingsSection'
+import ChatSection from './SecondSection/ChatSection'
+import ProfileSection from './SecondSection/ProfileSection'
+import SettingsSection from './SecondSection/SettingsSection'
 
 const DynamicSection = ({activeComponent}) => {
   return (

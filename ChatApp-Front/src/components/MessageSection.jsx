@@ -1,6 +1,6 @@
-import Body from "./RightSection/Body";
-import Footer from "./RightSection/Footer";
-import Header from "./RightSection/Header";
+import Body from "./ThirdSection/Body";
+import Footer from "./ThirdSection/Footer";
+import Header from "./ThirdSection/Header";
 
 const MessageSection = () => {
   return <div className="relative flex flex-col flex-grow ">
