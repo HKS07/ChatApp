@@ -5,6 +5,7 @@ import { CgProfile } from "react-icons/cg";
 import { MdLockOutline } from "react-icons/md";
 import { BiMessageDetail } from "react-icons/bi";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import UnderConstructionWrapper from "../Utils/UnderConstructionWrapper";
 
 const SettingsLabel = ({children,title}) => {
   const textColor = title === 'Log out' ? "text-red-500" : "text-customWhite";
@@ -42,10 +43,10 @@ const SettingsSection = () => {
           <p className="mr-3 text-customDarkWhite">KuchBhi</p>
         </div>
       </div>
-      <SettingsLabel title={"Account"}><CgProfile/></SettingsLabel>
+      {/* <SettingsLabel title={"Account"}><CgProfile/></SettingsLabel>
       <SettingsLabel title={"Privacy"}><MdLockOutline/></SettingsLabel>
       <SettingsLabel title={"Chats"}><BiMessageDetail/></SettingsLabel>
-      <SettingsLabel title={"Notifications"}><IoMdNotificationsOutline/></SettingsLabel>
+      <SettingsLabel title={"Notifications"}><IoMdNotificationsOutline/></SettingsLabel> */}
       <SettingsLabel title={"Log out"}><IoIosLogOut/></SettingsLabel>
     </div>
   );
