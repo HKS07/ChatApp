@@ -6,7 +6,7 @@ import { useState } from "react";
 const NotificationSection = ({ activeComponent, onComponentChange }) => {
   const [currentHovered, setCurrentHovered] = useState("x");
   return (
-    <div className="flex flex-col justify-between py-4 w-16 bg-customGray">
+    <div className="flex flex-col justify-between py-4 w-16 bg-customGray border-r border-[#3c4850]">
       <div
         className="flex items-center text-white text-2xl mx-auto"
         onMouseEnter={() => setCurrentHovered("Chats")}
