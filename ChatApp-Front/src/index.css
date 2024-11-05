@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    overflow: hidden;
-  }
+
 
 /* Custom scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
