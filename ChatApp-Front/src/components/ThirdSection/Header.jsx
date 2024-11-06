@@ -6,13 +6,13 @@ import { useContext } from "react";
 import GlobalContext from "../Utils/GlobalContext";
 
 const Header = () => {
-  const { activeChatExtendedSection, setActiveChatExtendedSection } =
+  const {  setActiveChatExtendedSection } =
     useContext(GlobalContext);
 
   return (
     <div className="relative top-0 flex w-full bg-customGray">
       <div
-        className="mx-3 my-2 text-4xl text-customLightWhite cursor-pointer"
+        className="mx-3 my-3 text-4xl text-customLightWhite cursor-pointer"
         onClick={() => {
           setActiveChatExtendedSection("ContactProfile");
         }}
@@ -32,7 +32,7 @@ const Header = () => {
           <GoDeviceCameraVideo />
         </div>
         <div className="p-2">
-          <div className="hover:bg-customDarkWhite hover:rounded-full">
+          <div className="p-2 hover:bg-customDarkWhite hover:rounded-full">
           <IoIosSearch
             onClick={() => {
               setActiveChatExtendedSection("SearchMessage");

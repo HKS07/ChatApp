@@ -45,7 +45,7 @@ const ContactProfile = () => {
           <div className="text-xl text-red-400">
             <MdBlock />
           </div>
-          <div className="text-lg text-red-400">Block Inam</div>
+          <div className="text-lg text-red-400">Block HKS Office</div>
         </div>
 
         <div className="flex items-center gap-4 py-2">
