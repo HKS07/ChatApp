@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 
 // Use the routes with their respective paths
 app.use('/chat', chatsRoutes);
-app.use('/contacts', contactsRoutes);
+app.use('/contact', contactsRoutes);
 app.use('/profile', profileRoutes);
 app.use('/message', messagesRoutes);
 
