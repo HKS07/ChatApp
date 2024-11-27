@@ -1,9 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import UserLable from "./UsersLabel";
 
 const ChatSection = () => {
   const [category, setCategory] = useState("All");
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    const loadContacts = async () => {
+      const contactFromDB = await fetchContacts(); 
+      
+      if (contactFromDB) {
+        setContacts(contactFromDB); 
+      }
+    };
+
+    loadContacts(); 
+  }, []); 
+
+  const fetchContacts = async () => {
+    try {
+      const userId = "67322c23acd7521854ca5eac";
+      const response = await fetch(`http://localhost:8080/contact/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data?.contacts; // Return the contacts data
+    } catch (error) {
+      console.error("Failed to fetch contacts:", error);
+      return [];
+    }
+  };
   const handleCategory = (cat) => {
     setCategory(cat);
   };
@@ -40,26 +75,23 @@ const ChatSection = () => {
         >
           Unread
         </div>
-        <div onClick={() => handleCategory("Favourites")}
+        <div
+          onClick={() => handleCategory("Favourites")}
           className={`mr-2 px-2 py-1 rounded-xl cursor-pointer ${
             category == "Favourites"
               ? "bg-customGreen text-customGreen3"
               : "bg-customLightGray text-customDarkWhite"
-          }`}>
+          }`}
+        >
           Favourites
         </div>
       </div>
       <div className="max-h-[580px] overflow-y-scroll custom-scrollbar">
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
-        <UserLable />
+        {contacts
+          ? contacts.map((contact) => {
+              return <UserLable   key={contact}/>;
+            })
+          : {}}
       </div>
     </div>
   );

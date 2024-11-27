@@ -5,9 +5,11 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 const port = process.env.PORT || 3000;
+const cors = require('cors')
 
-app.use(bodyParser.json());  // Use bodyParser to handle JSON requests
-app.use(router);  // Mount the router
+app.use(cors());
+app.use(bodyParser.json());  
+app.use(router);  
 
 // Test route
 app.get("/", (req, res) => {

@@ -2,14 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 exports.getAllContacts = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
   try {
     const user = await prisma.profiles.findUnique({
       where: {
         id: userId,
       },
     });
-
+    
     res.status(200).json({ contacts: user.contacts });
   } catch (error) {
     console.log("error fectching users all contacts", error);
