@@ -17,12 +17,25 @@ model Profiles {
   // favourites String[] @db.ObjectId
 }
 
-model chats {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  userIds       String[] @db.ObjectId
-  lastMessageId String   @db.ObjectId
-  updatedAt     DateTime @updatedAt
-  // isRead Boolean @default(false)
+model Chats {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  chats     Chat[]
+  updatedAt DateTime @updatedAt
+}
+
+model Chat {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  lastMessage       String
+  lastMessageSender String  @db.ObjectId
+  isRead            Boolean
+  Chats             Chats?  @relation(fields: [chatsId], references: [id])
+  chatsId           String? @db.ObjectId
+}
+
+model Online{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String
 }
 
 model messages {
