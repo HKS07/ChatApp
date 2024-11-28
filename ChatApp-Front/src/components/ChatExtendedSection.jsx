@@ -1,7 +1,7 @@
 import SearchMessage from "./FourthSection/SearchMessage";
 import ContactProfile from "./FourthSection/ContactProfile";
 import { useContext } from "react";
-import GlobalContext from "./Utils/GlobalContext";
+import GlobalContext from "../context/GlobalContext";
 
 const ChatExtendedSection = () => {
   const { activeChatExtendedSection } =

@@ -4,7 +4,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdBlock } from "react-icons/md";
 import { useContext } from "react";
-import GlobalContext from "../Utils/GlobalContext";
+import GlobalContext from "../../context/GlobalContext";
 // import { IoHeartDislikeOutline } from "react-icons/io5";
 
 const ContactProfile = () => {

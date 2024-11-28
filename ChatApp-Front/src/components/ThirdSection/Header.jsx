@@ -3,7 +3,7 @@ import { GoDeviceCameraVideo } from "react-icons/go";
 import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext } from "react";
-import GlobalContext from "../Utils/GlobalContext";
+import GlobalContext from "../../context/GlobalContext";
 
 const Header = () => {
   const {  setActiveChatExtendedSection } =

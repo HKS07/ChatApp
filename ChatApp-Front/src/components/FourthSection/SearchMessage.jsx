@@ -2,7 +2,7 @@ import { IoClose } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
 import { IoIosSearch } from "react-icons/io";
 import { useContext } from "react";
-import GlobalContext from "../Utils/GlobalContext";
+import GlobalContext from "../../context/GlobalContext"
 
 const SearchMessage = () => {
   const {setActiveChatExtendedSection} = useContext(GlobalContext);
