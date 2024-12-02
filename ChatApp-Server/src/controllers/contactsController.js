@@ -1,7 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-exports.getAllContacts = async (req, res) => {
+export const getAllContacts = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await prisma.profiles.findUnique({
@@ -17,9 +17,9 @@ exports.getAllContacts = async (req, res) => {
   }
 };
 
-exports.getContact = (req, res) => {};
+export const getContact = (req, res) => {};
 
-exports.addContact = async (req, res) => {
+export const addContact = async (req, res) => {
   const { contactId, userId } = req.body;
   try {
     await prisma.profiles.update({
@@ -40,7 +40,7 @@ exports.addContact = async (req, res) => {
   }
 };
 
-exports.deleteContact = async (req, res) => {
+export const deleteContact = async (req, res) => {
   const { userId, contactId } = req.body;
   try {
     const user = await prisma.profiles.findUnique({
@@ -76,4 +76,4 @@ exports.deleteContact = async (req, res) => {
   }
 };
 
-exports.updateContact = (req, res) => {};
+export const updateContact = (req, res) => {};

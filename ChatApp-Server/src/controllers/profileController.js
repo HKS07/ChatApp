@@ -1,9 +1,9 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-exports.getProfile = (req, res) => {};
+export const getProfile = (req, res) => {};
 
-exports.createProfile = async (req, res) => {
+export const createProfile = async (req, res) => {
   const { username, status } = req.body;
   try {
     if (!username && !status)
@@ -24,4 +24,4 @@ exports.createProfile = async (req, res) => {
   }
 };
 
-exports.updateProfile = (req, res) => {};
+export const updateProfile = (req, res) => {};

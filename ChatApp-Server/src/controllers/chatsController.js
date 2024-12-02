@@ -1,7 +1,7 @@
-const {PrismaClient} = require('@prisma/client');
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-exports.getAllChats = (req,res) => {
+export const getAllChats = (req,res) => {
     const {userId} = req.body;
     try {
         
@@ -10,7 +10,7 @@ exports.getAllChats = (req,res) => {
     }
 }
 
-exports.postChat = (req,res) => {
+export const postChat = (req,res) => {
     const {userId} = req.body;
     try {
         
@@ -19,10 +19,10 @@ exports.postChat = (req,res) => {
     }
 
 }
-exports.deleteChat = (req,res) => {
+export const deleteChat = (req,res) => {
     
 }
 
-exports.updateChat = (req,res) => {
+export const updateChat = (req,res) => {
     
 }

@@ -1,17 +1,17 @@
 
 
-exports.getAllMessages = (req,res) => {
+export const getAllMessages = (req,res) => {
     
 }
 
-exports.sendMessage = (req,res) => {
+export const sendMessage = (req,res) => {
 
 }
 
-exports.deleteMessage = (req,res) => {
+export const deleteMessage = (req,res) => {
 
 }
 
-exports.updateMessage = (req,res) => {
+export const updateMessage = (req,res) => {
     
 }

@@ -1,15 +1,17 @@
-require("dotenv").config();
-const { chatsRoutes, contactsRoutes, profileRoutes, messagesRoutes } = require('./routes/index');
-const bodyParser = require('body-parser');
-const express = require("express");
+import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import express from 'express';
+import cors from 'cors';
+import { chatsRoutes, contactsRoutes, profileRoutes, messagesRoutes, authRoutes } from './routes/index.js';
+
+dotenv.config();
+
 const app = express();
-const router = express.Router();
+
 const port = process.env.PORT || 3000;
-const cors = require('cors')
 
 app.use(cors());
 app.use(bodyParser.json());  
-app.use(router);  
 
 // Test route
 app.get("/", (req, res) => {
@@ -21,6 +23,7 @@ app.use('/chat', chatsRoutes);
 app.use('/contact', contactsRoutes);
 app.use('/profile', profileRoutes);
 app.use('/message', messagesRoutes);
+app.use('/auth', authRoutes);
 
 // Start the server
 app.listen(port, () => {
