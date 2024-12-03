@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
+import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
 const ChatSection = () => {
   const [category, setCategory] = useState("All");
   const [contacts, setContacts] = useState([]);
-
+  
 
   useEffect(() => {
     const loadContacts = async () => {
@@ -17,6 +18,10 @@ const ChatSection = () => {
 
     loadContacts(); 
   }, []); 
+
+  const handleAddUser = () => {
+    
+  }
 
   const fetchContacts = async () => {
     try {
@@ -44,7 +49,11 @@ const ChatSection = () => {
   };
   return (
     <div className="w-[446px] bg-customBlack text-white">
+      <div className="flex justify-between items-center">
+
       <div className="text-2xl font-bold mx-5 my-2 py-2">Chats</div>
+      <LuMessageSquarePlus className="mx-5 text-2xl" onClick={() => handleAddUser()}/>
+      </div>
       <div className="flex px-1 py-2 mx-2 my-1 rounded-lg bg-customLightGray">
         <div className="mx-2 text-2xl text-customDarkWhite">
           <IoIosSearch />
@@ -89,7 +98,7 @@ const ChatSection = () => {
       <div className="max-h-[580px] overflow-y-scroll custom-scrollbar">
         {contacts
           ? contacts.map((contact) => {
-              return <UserLable   key={contact} {...contact}/>;
+              return <UserLable   key={contact} id={contact}/>;
             })
           : {}}
       </div>

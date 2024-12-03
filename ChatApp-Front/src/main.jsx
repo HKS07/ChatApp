@@ -6,6 +6,7 @@ import { GlobalProvider } from "./context/GlobalContext.jsx";
 import AccountProvider from "./context/AccountProvider.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import SecondSectionProvider from "./context/SecondSection.jsx";
+import ContactsContextProvider from "./context/ContactsContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")).render(
       <GlobalProvider>
         <AccountProvider>
           <SecondSectionProvider>
-            <App />
+            <ContactsContextProvider>
+              <App />
+            </ContactsContextProvider>
           </SecondSectionProvider>
         </AccountProvider>
       </GlobalProvider>

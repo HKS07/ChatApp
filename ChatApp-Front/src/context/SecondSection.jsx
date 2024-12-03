@@ -4,10 +4,10 @@ import {  createContext, useState } from "react";
 export const SecondSectionContext = createContext(null);
 
 const SecondSectionProvider = ({children}) => {
-    const [chatLabel,setChatLabel] = useState();
-
+    const [currentChatLabel,setCurrentChatLabel] = useState(undefined);
+    
     return (
-        <SecondSectionContext.Provider value={{chatLabel,setChatLabel}}>
+        <SecondSectionContext.Provider value={{currentChatLabel,setCurrentChatLabel}}>
             {children}
         </SecondSectionContext.Provider>
     )
