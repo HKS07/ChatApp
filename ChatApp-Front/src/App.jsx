@@ -7,8 +7,7 @@ import { AccountContext } from "./context/AccountProvider";
 import Login from "./components/Login";
 
 function App() {
-  const { account } = useContext(AccountContext);
-  console.log("account:",account);
+  const { oAuthInfo } = useContext(AccountContext);
   
   const [activeComponent, setActiveComponent] = useState("ChatSection");
   const handleComponentChange = (componentName) => {
@@ -16,7 +15,7 @@ function App() {
   };
   return (
     <>
-      {account === undefined? (
+      {oAuthInfo === undefined? (
         <Login />
       ) : (
         <div className="bg-[#262524] m-0 p-0">

@@ -9,7 +9,8 @@ generator client {
 
 model Profiles {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  username   String   @unique
+  oAuthSub   String?   @unique
+  username   String?   @unique
   status     String?
   profileUrl String?
   contacts   String[] @db.ObjectId

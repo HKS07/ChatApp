@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import UserLable from "./UsersLabel";
-
 const ChatSection = () => {
   const [category, setCategory] = useState("All");
   const [contacts, setContacts] = useState([]);
+
 
   useEffect(() => {
     const loadContacts = async () => {
@@ -89,7 +89,7 @@ const ChatSection = () => {
       <div className="max-h-[580px] overflow-y-scroll custom-scrollbar">
         {contacts
           ? contacts.map((contact) => {
-              return <UserLable   key={contact}/>;
+              return <UserLable   key={contact} {...contact}/>;
             })
           : {}}
       </div>

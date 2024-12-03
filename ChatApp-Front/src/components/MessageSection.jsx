@@ -4,10 +4,10 @@ import Header from "./ThirdSection/Header";
 
 const MessageSection = () => {
   return <div className="relative flex flex-col flex-grow ">
-    <Header/>
-    <Body/>
-    <Footer/>
-  </div>;
+  <Header/>
+  <Body/>
+  <Footer/>
+</div>
 };
 
 export default MessageSection;

@@ -3,11 +3,11 @@ import { createContext, useState } from "react";
 export const AccountContext = createContext(null);
 
 const AccountProvider = ({children}) => {
-
-    const [account, setAccount] = useState();
+    const [oAuthInfo, setOAuthInfo] = useState();
+    const [accountDBInfo, setAccountDBInfo] = useState();
 
     return (
-        <AccountContext.Provider value={{account,setAccount}}>
+        <AccountContext.Provider value={{oAuthInfo,setOAuthInfo,accountDBInfo,setAccountDBInfo}}>
             {children}
         </AccountContext.Provider>
     )

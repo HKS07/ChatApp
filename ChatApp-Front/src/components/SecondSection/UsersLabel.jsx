@@ -1,5 +1,12 @@
 import { CgProfile } from "react-icons/cg";
-const UserLable = () => {
+import { useContext } from "react";
+import {SecondSectionContext} from '../../context/SecondSection';
+
+const UserLable = ({}) => {
+  // console.log("prop:",prop);
+  const {setChatLabel} = useContext(SecondSectionContext);
+
+  
   return (
     <div className="flex w-[95%] hover:bg-customDarkWhite2">
       <div className="text-4xl m-2 py-3">

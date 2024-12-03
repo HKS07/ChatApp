@@ -1,7 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export const getProfile = (req, res) => {};
+export const getProfile = async (req, res) => {
+  const {oAuthSub} = req.params;
+  try {
+    const user = await prisma.profiles.findUnique({
+      where: {
+        oAuthSub: oAuthSub
+      }
+    })
+
+    if(!user)
+    {
+      res.status(404).json({message: "user doesn't exist"});
+    }
+    res.status(200).json({message: "successfully fetched user", user: user});
+  } catch (error) {
+    console.log('Error during fetching profile: ',error);
+    res.send(400).json({message: "Error during fetching profile", error: error})
+    
+  }
+};
 
 export const createProfile = async (req, res) => {
   const { username, status } = req.body;

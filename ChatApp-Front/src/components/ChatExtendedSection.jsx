@@ -6,7 +6,6 @@ import GlobalContext from "../context/GlobalContext";
 const ChatExtendedSection = () => {
   const { activeChatExtendedSection } =
     useContext(GlobalContext);
-  console.log(activeChatExtendedSection);
 
   return (
     <>

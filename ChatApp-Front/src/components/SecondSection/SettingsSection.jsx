@@ -25,9 +25,9 @@ const SettingsLabel = ({children,title,onClickFunction}) => {
 
 
 const SettingsSection = () => {
-  const {setAccount} = useContext(AccountContext);
+  const {setOAuthInfo} = useContext(AccountContext);
   const handleLogout = async () => {
-    setAccount(undefined);
+    setOAuthInfo(undefined);
     
   }
   return (
