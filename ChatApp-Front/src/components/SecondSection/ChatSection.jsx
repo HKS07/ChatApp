@@ -1,31 +1,32 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
+import { SecondSectionContext } from "../../context/SecondSection";
+import { AccountContext } from "../../context/AccountProvider";
 const ChatSection = () => {
+  const { setDynamicActiveComponent } = useContext(SecondSectionContext);
+  const { accountDBInfo } = useContext(AccountContext);
   const [category, setCategory] = useState("All");
   const [contacts, setContacts] = useState([]);
-  
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const loadContacts = async () => {
-      const contactFromDB = await fetchContacts(); 
-      
+      const contactFromDB = await fetchContacts();
+
       if (contactFromDB) {
-        setContacts(contactFromDB); 
+        setContacts(contactFromDB);
       }
     };
-
-    loadContacts(); 
-  }, []); 
-
-  const handleAddUser = () => {
-    
-  }
+    if (accountDBInfo) {
+      loadContacts();
+    }
+  }, [accountDBInfo]);
 
   const fetchContacts = async () => {
     try {
-      const userId = "67322c23acd7521854ca5eac";
+      const userId = accountDBInfo.id;
       const response = await fetch(`http://localhost:8080/contact/${userId}`, {
         method: "GET",
         headers: {
@@ -50,9 +51,22 @@ const ChatSection = () => {
   return (
     <div className="w-[446px] bg-customBlack text-white">
       <div className="flex justify-between items-center">
-
-      <div className="text-2xl font-bold mx-5 my-2 py-2">Chats</div>
-      <LuMessageSquarePlus className="mx-5 text-2xl" onClick={() => handleAddUser()}/>
+        <div className="text-2xl font-bold mx-5 my-2 py-2">Chats</div>
+        <div className="relative flex items-center">
+          <LuMessageSquarePlus
+            className="mx-5 text-2xl cursor-pointer"
+            onClick={() => setDynamicActiveComponent("AddUserSection")}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          />
+          {isHovered && (
+            <div className="absolute z-10 left-14 text-sm p-0 m-0">
+              <div className="bg-white text-black rounded-2xl p-2 shadow-lg inline-block whitespace-nowrap">
+                Add User
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex px-1 py-2 mx-2 my-1 rounded-lg bg-customLightGray">
         <div className="mx-2 text-2xl text-customDarkWhite">
@@ -98,7 +112,7 @@ const ChatSection = () => {
       <div className="max-h-[580px] overflow-y-scroll custom-scrollbar">
         {contacts
           ? contacts.map((contact) => {
-              return <UserLable   key={contact} id={contact}/>;
+              return <UserLable key={contact} id={contact} />;
             })
           : {}}
       </div>
