@@ -12,13 +12,14 @@ const ChatAppWebLogin = () => {
     try {
       const decoded = jwtDecode(res.credential);
       setOAuthInfo(decoded);
-
-      const user = await fetch("http://localhost:8080/auth/", {
+      console.log(decoded);
+      
+      const user = await fetch("http://localhost:8080/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ oAuthSub: decoded.sub, username: decoded.name, profileUrl: decoded.picture }),
+        body: JSON.stringify({ oAuthSub: decoded.sub, username: decoded.name, profileUrl: decoded.picture, email: decoded.email }),
       });
 
       const userData = await user.json();

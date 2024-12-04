@@ -9,8 +9,8 @@ export const getAllContacts = async (req, res) => {
         id: userId,
       },
     });
-    
-    res.status(200).json({ contacts: user.contacts });
+    if(!user) return res.status(404).json({message: "no user exists"});
+    res.status(200).json({ contacts: user.contacts.length === 0? [] : user.contacts });
   } catch (error) {
     console.log("error fectching users all contacts", error);
     res.status(400).send("Bad request");
@@ -18,6 +18,42 @@ export const getAllContacts = async (req, res) => {
 };
 
 export const getContact = (req, res) => {};
+
+export const sendRequest = async (req,res) => {
+  try {
+    const {senderEmail, receiverEmail} = req.body;
+
+    const receiverProfile = await prisma.profiles.findUnique({
+      where: {
+        email: receiverEmail,
+      }
+    });
+    
+    if(!receiverEmail) return res.status(404).json({message: "No such user exists."})
+
+    const senderProfile = await prisma.profiles.findUnique({
+      where: {
+        email: senderEmail,
+      },
+    })
+    
+    const newRequest = await prisma.request.create({
+      data: {
+        senderEmail: senderEmail,
+        receiverEmail: receiverEmail,
+        profileId: senderProfile.id,
+      }
+    });
+
+    
+    return res.status(201);
+  } catch (error) {
+    console.log('Error while sending request: ', error);
+    return res.status(400).json({message: "couldn't send request for adding user", error: error});
+    
+  }
+}
+
 
 export const addContact = async (req, res) => {
   const { contactId, userId } = req.body;
@@ -32,11 +68,11 @@ export const addContact = async (req, res) => {
         },
       },
     });
-    res.status(200).send("contact added successfully.");
+    return res.status(200).send("contact added successfully.");
   } catch (error) {
     console.log("error occured during adding contact to usser: ", error);
 
-    res.status(500).send("An error occured during adding new contact to user");
+    return res.status(500).send("An error occured during adding new contact to user");
   }
 };
 

@@ -2,9 +2,11 @@ import { BiMessageDetail } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import Banner from "./Utils/Banner";
-import { useState } from "react";
-const NotificationSection = ({ activeComponent, onComponentChange }) => {
-  const [currentHovered, setCurrentHovered] = useState("x");
+import { useContext, useState } from "react";
+import { SecondSectionContext } from "../context/SecondSection";
+const NotificationSection = () => {
+  const {dynamicActiveComponent, setDynamicActiveComponent} = useContext(SecondSectionContext);
+  const [currentHovered, setCurrentHovered] = useState(undefined);
   return (
     <div className="flex flex-col justify-between py-4 w-16 bg-customGray border-r border-[#3c4850]">
       <div
@@ -12,12 +14,12 @@ const NotificationSection = ({ activeComponent, onComponentChange }) => {
         onMouseEnter={() => setCurrentHovered("Chats")}
         onMouseLeave={() => setCurrentHovered("x")}
       >
-        {activeComponent === "ChatSection" ? (
-          <div className="p-2 rounded-full bg-customDarkWhite">
+        {dynamicActiveComponent === "ChatSection" ? (
+          <div className="p-2 rounded-full bg-customDarkWhite cursor-pointer">
             <BiMessageDetail />
           </div>
         ) : (
-          <div className="p-2" onClick={() => onComponentChange("ChatSection")}>
+          <div className="p-2" onClick={() => setDynamicActiveComponent("ChatSection")}>
             {" "}
             <BiMessageDetail />
           </div>
@@ -27,18 +29,18 @@ const NotificationSection = ({ activeComponent, onComponentChange }) => {
 
       <div className="text-white text-2xl mx-auto">
         <div
-          className="flex items-center text-white text-2xl mx-auto"
+          className="flex items-center text-white text-2xl mx-auto cursor-pointer"
           onMouseEnter={() => setCurrentHovered("Settings")}
           onMouseLeave={() => setCurrentHovered("x")}
         >
-          {activeComponent === "SettingsSection" ? (
+          {dynamicActiveComponent === "SettingsSection" ? (
             <div className="p-2 rounded-full bg-customDarkWhite">
               <IoSettingsOutline />
             </div>
           ) : (
             <div
               className="p-2"
-              onClick={() => onComponentChange("SettingsSection")}
+              onClick={() => setDynamicActiveComponent("SettingsSection")}
             >
               {" "}
               <IoSettingsOutline />
@@ -48,18 +50,18 @@ const NotificationSection = ({ activeComponent, onComponentChange }) => {
         </div>
 
         <div
-          className="flex items-center text-white text-2xl mx-auto"
+          className="flex items-center text-white text-2xl mx-auto cursor-pointer"
           onMouseEnter={() => setCurrentHovered("Profile")}
           onMouseLeave={() => setCurrentHovered("x")}
         >
-          {activeComponent === "ProfileSection" ? (
+          {dynamicActiveComponent === "ProfileSection" ? (
             <div className="p-2 rounded-full bg-customDarkWhite">
               <CgProfile />
             </div>
           ) : (
             <div
               className="p-2"
-              onClick={() => onComponentChange("ProfileSection")}
+              onClick={() => setDynamicActiveComponent("ProfileSection")}
             >
               {" "}
               <CgProfile />

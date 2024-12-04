@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const login = async (req, res) => {
-  const { oAuthSub, username, profileUrl } = req.body;
+  const { oAuthSub, username, profileUrl, email } = req.body;
   try {
     
     let user = await prisma.profiles.findUnique({
@@ -17,6 +17,7 @@ export const login = async (req, res) => {
           oAuthSub,
           username,
           profileUrl,
+          email,
         },
       });
     }

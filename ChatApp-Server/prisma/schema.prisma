@@ -8,14 +8,23 @@ generator client {
 }
 
 model Profiles {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   oAuthSub   String?   @unique
   username   String?   @unique
   status     String?
   profileUrl String?
-  contacts   String[] @db.ObjectId
-  chatIds    String[] @db.ObjectId
+  email      String?   @unique
+  contacts   String[]  @db.ObjectId
+  chatIds    String[]  @db.ObjectId
+  requests   String[]  @db.ObjectId
   // favourites String[] @db.ObjectId
+}
+
+model Request {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderEmail   String   @unique
+  receiverEmail String   @unique
+  status        String   @default("Pending")
 }
 
 model Chats {
@@ -34,8 +43,8 @@ model Chat {
   chatsId           String? @db.ObjectId
 }
 
-model Online{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+model Online {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @unique
 }
 

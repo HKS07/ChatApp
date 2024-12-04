@@ -9,10 +9,6 @@ import Login from "./components/Login";
 function App() {
   const { oAuthInfo } = useContext(AccountContext);
   
-  const [activeComponent, setActiveComponent] = useState("ChatSection");
-  const handleComponentChange = (componentName) => {
-    setActiveComponent(componentName);
-  };
   return (
     <>
       {oAuthInfo === undefined? (
@@ -20,11 +16,8 @@ function App() {
       ) : (
         <div className="bg-[#262524] m-0 p-0">
           <div className="p-4 flex flex-row  min-h-screen">
-            <NotificationSection
-              activeComponent={activeComponent}
-              onComponentChange={handleComponentChange}
-            />
-            <DynamicSection activeComponent={activeComponent} />
+            <NotificationSection/>
+            <DynamicSection />
             <MessageSection />
             <ChatExtendedSection />
           </div>
