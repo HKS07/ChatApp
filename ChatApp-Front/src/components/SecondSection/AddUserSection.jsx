@@ -1,12 +1,64 @@
 import { useContext, useState } from "react";
 import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";
-import {AccountContext} from './../../context/AccountProvider';
+import { AccountContext } from "./../../context/AccountProvider";
+import { SecondSectionContext } from "../../context/SecondSection";
+
+const handleStatusUI = (status) => {
+  const pending = "text-yellow-500 border border-yellow-500";
+  const accepted = "text-green-500 border border-green-500";
+  const rejected = "text-red-500 border border-red-500";
+  if (status === "Pending") return pending;
+  else if (status === "Accepted") return accepted;
+  else return rejected;
+};
+
+const SendRequestLabel = ({ req }) => {
+  return (
+    <div
+      key={req.id}
+      className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-3"
+    >
+      <div className="text-white">Request to {req.receiverEmail}</div>
+      <div className={`${handleStatusUI(req.status)} px-2 py-1 rounded-lg`}>
+        {req.status}
+      </div>
+    </div>
+  );
+};
+
+const ReceiveRequestLabel = ({ req, updateStatus }) => {
+  return (
+    <div
+      key={req.id}
+      className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-3"
+    >
+      <div className="text-white">Request from {req.senderEmail}</div>
+      <div className="space-x-3 flex items-center">
+        <button
+          className="bg-green-500 p-2 rounded-full text-white cursor-pointer"
+          onClick={() => updateStatus("Accepted", req)}
+        >
+          <FaCheck />
+        </button>
+        <button
+          className="bg-red-500 p-2 rounded-full text-white"
+          onClick={() => updateStatus("Rejected", req)}
+        >
+          <FaTimes />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const AddUserSection = () => {
-  const {accountDBInfo} = useContext(AccountContext);
+  const { accountDBInfo } = useContext(AccountContext);
+  const { sentRequest, receivedRequest, setReceivedRequest } =
+    useContext(SecondSectionContext);
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
   // const [isSentSucceed, setIsSentSucceed] = useState();
-  
+  // console.log("sender request",sentRequest,"received request",receivedRequest);
 
   const handleCategory = (type) => {
     setCategory(type);
@@ -14,26 +66,70 @@ const AddUserSection = () => {
 
   const handleSendRequest = async () => {
     try {
-      
-      const sendRequest = await fetch('http://localhost:8080/contact/sendRequest',{
-        method: 'POST',
-        headers: {"Content-Type": "application/json",},
-        body: JSON.stringify({senderEmail: accountDBInfo.email, receiverEmail:emailId}),
-      });
-      
-      // if(sendRequest.ok)
-      // {
-      //   setIsSentSucceed(true);
-      // }
-      // else{
-      //   setIsSentSucceed(false);
-      // }
-
-
+      const sendRequest = await fetch(
+        "http://localhost:8080/requests/sendRequest",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            senderEmail: accountDBInfo.email,
+            receiverEmail: emailId,
+          }),
+        }
+      );
     } catch (error) {
       console.log("error while sending request", error);
     }
-  }
+  };
+
+  const updateStatus = async (status, req) => {
+    
+    const updatedStatus = await fetch(
+      "http://localhost:8080/requests/updateStatus",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: status,
+          reqId: req.id,
+        }),
+      }
+    );
+    
+    if (updatedStatus.ok) {
+      //update second section store
+      // if accepted
+      // 1. remove from received requests in the second section context
+      // 2. add this to contacts
+      //    2.1 of sender
+      //    2.2 of reciever
+      //
+      //rejected
+      // 1. remove from received requests in the second section context
+      
+      const newReceivedRequest = receivedRequest.filter(
+        (recReq) => recReq.id !== req.id
+      );
+      setReceivedRequest(newReceivedRequest);
+
+      if (status === "Accepted") {
+        
+        // this will add user to accepter contact
+        const addNewContact = await fetch("http://localhost:8080/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userAEmailId: accountDBInfo.email, userBEmailId:  req.senderEmail}),
+        });
+
+
+        //create new chat and put chat id to both the user.
+        //think more before writing this code!!!!!!!
+        
+      }
+    }
+  };
 
   return (
     <div className="w-[446px] bg-customBlack text-white p-5 rounded-xl">
@@ -53,7 +149,10 @@ const AddUserSection = () => {
             className="w-full p-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none"
             onChange={(e) => setEmailId(e.target.value)}
           />
-          <button className="bg-customGreen text-customGreen3 p-2 rounded-lg flex items-center" onClick={() => handleSendRequest()}>
+          <button
+            className="bg-customGreen text-customGreen3 p-2 rounded-lg flex items-center"
+            onClick={() => handleSendRequest()}
+          >
             <FaPaperPlane className="mr-1" /> Send
           </button>
         </div>
@@ -88,23 +187,30 @@ const AddUserSection = () => {
         {category === "Received" ? (
           <div>
             {/* Received Requests UI */}
-            <div className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-3">
-              <div className="text-white">Request from User123</div>
-              <div className="space-x-3 flex items-center">
-                <button className="bg-green-500 p-2 rounded-full text-white">
-                  <FaCheck />
-                </button>
-                <button className="bg-red-500 p-2 rounded-full text-white">
-                  <FaTimes />
-                </button>
-              </div>
-            </div>
+            {receivedRequest ? (
+              receivedRequest?.map((req) => (
+                <ReceiveRequestLabel
+                  key={req.id}
+                  req={req}
+                  updateStatus={updateStatus}
+                />
+              ))
+            ) : (
+              <></>
+            )}
             {/* Add more requests as needed */}
           </div>
         ) : (
           <div>
             {/* Sent Requests UI */}
-            <div className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-3">
+            {sentRequest ? (
+              sentRequest.map((req) => (
+                <SendRequestLabel key={req.id} req={req} />
+              ))
+            ) : (
+              <></>
+            )}
+            {/* <div className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-3">
               <div className="text-white">Request to User456</div>
               <div className="text-yellow-500 border border-yellow-500 px-2 py-1 rounded-lg">
                 Pending
@@ -121,7 +227,7 @@ const AddUserSection = () => {
               <div className="text-red-500 border border-red-500 px-2 py-1 rounded-lg">
                 Rejected
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

@@ -25,6 +25,7 @@ model Request {
   senderEmail   String   @unique
   receiverEmail String   @unique
   status        String   @default("Pending")
+   
 }
 
 model Chats {

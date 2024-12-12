@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import express from 'express';
 import cors from 'cors';
-import { chatsRoutes, contactsRoutes, profileRoutes, messagesRoutes, authRoutes } from './routes/index.js';
+import { chatsRoutes, contactsRoutes, profileRoutes, messagesRoutes, authRoutes, requestsRoutes } from './routes/index.js';
 
 dotenv.config();
 
@@ -24,6 +24,7 @@ app.use('/contact', contactsRoutes);
 app.use('/profile', profileRoutes);
 app.use('/message', messagesRoutes);
 app.use('/auth', authRoutes);
+app.use('/requests', requestsRoutes);
 
 // Start the server
 app.listen(port, () => {

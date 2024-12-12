@@ -10,8 +10,8 @@ export const getAllChats = (req,res) => {
     }
 }
 
-export const postChat = (req,res) => {
-    const {userId} = req.body;
+export const addChat = (req,res) => {
+    const {senderEmailId} = req.body;
     try {
         
     } catch (error) {

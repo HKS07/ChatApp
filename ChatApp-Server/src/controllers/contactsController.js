@@ -9,8 +9,10 @@ export const getAllContacts = async (req, res) => {
         id: userId,
       },
     });
-    if(!user) return res.status(404).json({message: "no user exists"});
-    res.status(200).json({ contacts: user.contacts.length === 0? [] : user.contacts });
+    if (!user) return res.status(404).json({ message: "no user exists" });
+    res
+      .status(200)
+      .json({ contacts: user.contacts.length === 0 ? [] : user.contacts });
   } catch (error) {
     console.log("error fectching users all contacts", error);
     res.status(400).send("Bad request");
@@ -19,52 +21,36 @@ export const getAllContacts = async (req, res) => {
 
 export const getContact = (req, res) => {};
 
-export const sendRequest = async (req,res) => {
-  try {
-    const {senderEmail, receiverEmail} = req.body;
-
-    const receiverProfile = await prisma.profiles.findUnique({
-      where: {
-        email: receiverEmail,
-      }
-    });
-    
-    if(!receiverEmail) return res.status(404).json({message: "No such user exists."})
-
-    const senderProfile = await prisma.profiles.findUnique({
-      where: {
-        email: senderEmail,
-      },
-    })
-    
-    const newRequest = await prisma.request.create({
-      data: {
-        senderEmail: senderEmail,
-        receiverEmail: receiverEmail,
-        profileId: senderProfile.id,
-      }
-    });
-
-    
-    return res.status(201);
-  } catch (error) {
-    console.log('Error while sending request: ', error);
-    return res.status(400).json({message: "couldn't send request for adding user", error: error});
-    
-  }
-}
 
 
 export const addContact = async (req, res) => {
-  const { contactId, userId } = req.body;
+  const { userAEmailId, userBEmailId } = req.body;
+  
   try {
+    const userA = await prisma.profiles.findUnique({where: {email: userAEmailId}});
+    const userB = await prisma.profiles.findUnique({where: {email: userBEmailId}});
+
+    if(!userA || !userB)
+    {
+      return res.status(404).json({message:"user doesn't exists"});
+    }
     await prisma.profiles.update({
       where: {
-        id: userId,
+        email: userA.email,
       },
       data: {
         contacts: {
-          push: contactId,
+          push: userB.id,
+        },
+      },
+    });
+    await prisma.profiles.update({
+      where: {
+        email: userB.email,
+      },
+      data: {
+        contacts: {
+          push: userA.id,
         },
       },
     });
@@ -72,7 +58,9 @@ export const addContact = async (req, res) => {
   } catch (error) {
     console.log("error occured during adding contact to usser: ", error);
 
-    return res.status(500).send("An error occured during adding new contact to user");
+    return res
+      .status(500)
+      .send("An error occured during adding new contact to user");
   }
 };
 
@@ -90,11 +78,10 @@ export const deleteContact = async (req, res) => {
     }
 
     const updatedContacts = user.contacts.filter((curId) => curId != contactId);
-    console.log(updatedContacts);
 
     await prisma.profiles.update({
       where: {
-        id: userId,
+        id: userId, 
       },
       data: {
         contacts: {
