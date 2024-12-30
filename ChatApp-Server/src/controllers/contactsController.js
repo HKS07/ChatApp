@@ -10,9 +10,24 @@ export const getAllContacts = async (req, res) => {
       },
     });
     if (!user) return res.status(404).json({ message: "no user exists" });
+
+    const contactUsers = await prisma.profiles.findMany({
+      where: {
+        id: {
+          in: user.contacts
+        }
+      },
+      select: {
+        id: true,
+        username: true,
+        status: true,
+        email: true,
+        profileUrl: true
+      }
+    })
     res
       .status(200)
-      .json({ contacts: user.contacts.length === 0 ? [] : user.contacts });
+      .json({ contacts: user.contacts.length === 0 ? [] : contactUsers });
   } catch (error) {
     console.log("error fectching users all contacts", error);
     res.status(400).send("Bad request");

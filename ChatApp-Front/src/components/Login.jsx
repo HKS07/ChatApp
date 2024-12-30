@@ -6,7 +6,8 @@ import { useContext } from "react";
 
 const ChatAppWebLogin = () => {
   const { setOAuthInfo, setAccountDBInfo } = useContext(AccountContext);
-  const { setSentRequest, setReceivedRequest } = useContext(SecondSectionContext);
+  const { setSentRequest, setReceivedRequest } =
+    useContext(SecondSectionContext);
   const onLoginError = (res) => {
     console.log("Login Failed", res);
   };
@@ -32,7 +33,7 @@ const ChatAppWebLogin = () => {
       const userData = await user.json();
 
       setAccountDBInfo(userData.user);
-      
+
       const fetchRequests = await fetch(
         "http://localhost:8080/requests/getRequests",
         {
@@ -43,17 +44,20 @@ const ChatAppWebLogin = () => {
           body: JSON.stringify({ userId: userData.user.id }),
         }
       );
+
       const requests = await fetchRequests.json();
       console.log(requests);
-      
-      if(requests)
-      {
-        const sentRequest = requests?.request?.filter(req => req.senderEmail === decoded.email);
-        const receivedRequest = requests?.request?.filter(req => req.receiverEmail === decoded.email);
+
+      if (requests) {
+        const sentRequest = requests?.request?.filter(
+          (req) => req.senderEmail === decoded.email
+        );
+        const receivedRequest = requests?.request?.filter(
+          (req) => req.receiverEmail === decoded.email
+        );
         setSentRequest(sentRequest);
         setReceivedRequest(receivedRequest);
       }
-
     } catch (error) {
       console.log("Getting error:", error);
     }

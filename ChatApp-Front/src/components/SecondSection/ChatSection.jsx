@@ -13,6 +13,7 @@ const ChatSection = () => {
 
   useEffect(() => {
     const loadContacts = async () => {
+      if(contacts.length !== 0) return ;
       const contactFromDB = await fetchContacts();
 
       if (contactFromDB) {
@@ -39,6 +40,8 @@ const ChatSection = () => {
       }
 
       const data = await response.json();
+      console.log("fetch Contacts: ",data);
+      
       return data?.contacts; // Return the contacts data
     } catch (error) {
       console.error("Failed to fetch contacts:", error);
@@ -112,7 +115,7 @@ const ChatSection = () => {
       <div className="max-h-[580px] overflow-y-scroll custom-scrollbar">
         {contacts
           ? contacts.map((contact) => {
-              return <UserLable key={contact} id={contact} />;
+              return <UserLable key={contact.id} {...contact} />;
             })
           : {}}
       </div>

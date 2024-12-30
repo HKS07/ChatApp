@@ -5,6 +5,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext } from "react";
 import GlobalContext from "../../context/GlobalContext";
 
+
 const Header = () => {
   const {  setActiveChatExtendedSection } =
     useContext(GlobalContext);

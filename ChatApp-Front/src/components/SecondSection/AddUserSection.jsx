@@ -83,7 +83,6 @@ const AddUserSection = () => {
   };
 
   const updateStatus = async (status, req) => {
-    
     const updatedStatus = await fetch(
       "http://localhost:8080/requests/updateStatus",
       {
@@ -95,7 +94,7 @@ const AddUserSection = () => {
         }),
       }
     );
-    
+
     if (updatedStatus.ok) {
       //update second section store
       // if accepted
@@ -106,27 +105,27 @@ const AddUserSection = () => {
       //
       //rejected
       // 1. remove from received requests in the second section context
-      
+
       const newReceivedRequest = receivedRequest.filter(
         (recReq) => recReq.id !== req.id
       );
       setReceivedRequest(newReceivedRequest);
 
       if (status === "Accepted") {
-        
         // this will add user to accepter contact
         const addNewContact = await fetch("http://localhost:8080/contact", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userAEmailId: accountDBInfo.email, userBEmailId:  req.senderEmail}),
+          body: JSON.stringify({
+            userAEmailId: accountDBInfo.email,
+            userBEmailId: req.senderEmail,
+          }),
         });
-
 
         //create new chat and put chat id to both the user.
         //think more before writing this code!!!!!!!
-        
       }
     }
   };
@@ -188,13 +187,35 @@ const AddUserSection = () => {
           <div>
             {/* Received Requests UI */}
             {receivedRequest ? (
-              receivedRequest?.map((req) => (
-                <ReceiveRequestLabel
-                  key={req.id}
-                  req={req}
-                  updateStatus={updateStatus}
-                />
-              ))
+              receivedRequest?.map((req) => {
+                if (req.status === "Pending") {
+                  return (
+                    <ReceiveRequestLabel
+                      key={req.id}
+                      req={req}
+                      updateStatus={updateStatus}
+                    />
+                  );
+                } else {
+                  return (
+                    <div
+                      key={req.id}
+                      className="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-3"
+                    >
+                      <div className="text-white">
+                        Request to {req.receiverEmail}
+                      </div>
+                      <div
+                        className={`${handleStatusUI(
+                          req.status
+                        )} px-2 py-1 rounded-lg`}
+                      >
+                        {req.status}
+                      </div>
+                    </div>
+                  );
+                }
+              })
             ) : (
               <></>
             )}
