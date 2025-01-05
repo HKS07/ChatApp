@@ -6,10 +6,10 @@ import { useContext } from "react";
 import Default from "./ThirdSection/Default";
 
 const MessageSection = () => {
-  const { currentChatLabel } = useContext(SecondSectionContext);
+  const { currentConversationUser } = useContext(SecondSectionContext);
   return (
     <>
-      {currentChatLabel === undefined ? (
+      {currentConversationUser === undefined ? (
         <Default />
       ) : (
         <div className="relative flex flex-col flex-grow ">

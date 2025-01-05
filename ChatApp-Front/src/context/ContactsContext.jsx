@@ -3,8 +3,7 @@ import { createContext, useState } from "react";
 export const ContactsContext = createContext(null);
 
 const ContactsContextProvider = ({children}) => {
-    const [contacts, setContacts] = useState(undefined);
-
+    const [contacts, setContacts] = useState();
     return (
         <ContactsContext.Provider value={{contacts,setContacts}}>
         {children}

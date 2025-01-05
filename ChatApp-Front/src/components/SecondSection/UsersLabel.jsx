@@ -1,16 +1,21 @@
-import { CgProfile } from "react-icons/cg";
+
+import { ConversationContext } from "../../context/ConversationContext";
 import { SecondSectionContext } from "../../context/SecondSection";
 import { useContext } from "react";
 
-const UserLable = ({ id, username, profileUrl }) => {
-  const { setCurrentChatLabel } = useContext(SecondSectionContext);
-  const onClickSetLabel = (id) => {
-    setCurrentChatLabel(id);
+const UserLable = ({ id, username, profileUrl, msg, convoId }) => {
+  const { setCurrentConversationUser } = useContext(SecondSectionContext);
+  
+  
+  
+  
+  const onClickSetLabel = (id,username, profileUrl, convoId) => {
+    setCurrentConversationUser({id: id, username: username, profileUrl: profileUrl,convoId: convoId});
   };
   return (
     <div
       className="flex w-[95%] hover:bg-customDarkWhite2 cursor-pointer"
-      onClick={() => onClickSetLabel(id)}
+      onClick={() => onClickSetLabel(id,username,profileUrl,convoId)}
     >
       <div className="text-4xl m-2 py-3 w-14 h-14">
         <img src={profileUrl} alt=""/>
@@ -20,7 +25,7 @@ const UserLable = ({ id, username, profileUrl }) => {
           <div className="text-customLightWhite">{username}</div>
           <div className=" text-customDarkWhite">24/10/2024</div>
         </div>
-        <div className="text-customDarkWhite">last messgage</div>
+        <div className="text-customDarkWhite">{msg? msg: ""}</div>
       </div>
     </div>
   );

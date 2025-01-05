@@ -8,24 +8,23 @@ generator client {
 }
 
 model Profiles {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  oAuthSub   String?   @unique
-  username   String?   @unique
-  status     String?
-  profileUrl String?
-  email      String?   @unique
-  contacts   String[]  @db.ObjectId
-  chatIds    String[]  @db.ObjectId
-  requests   String[]  @db.ObjectId
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  oAuthSub       String?  @unique
+  username       String?  @unique
+  status         String?
+  profileUrl     String?
+  email          String?  @unique
+  contacts       String[] @db.ObjectId
+  conversationId String[] @db.ObjectId
+  requests       String[] @db.ObjectId
   // favourites String[] @db.ObjectId
 }
 
 model Request {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  senderEmail   String   @unique
-  receiverEmail String   @unique
-  status        String   @default("Pending")
-   
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  senderEmail   String @unique
+  receiverEmail String @unique
+  status        String @default("Pending")
 }
 
 model Chats {
@@ -42,6 +41,22 @@ model Chat {
   isRead            Boolean
   Chats             Chats?  @relation(fields: [chatsId], references: [id])
   chatsId           String? @db.ObjectId
+}
+
+model Conversations {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  participants String[]
+  lastMessage  String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Messages {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String
+  senderId       String
+  content        String
+  timeStamp      DateTime @updatedAt
+  readBy         String[]
 }
 
 model Online {

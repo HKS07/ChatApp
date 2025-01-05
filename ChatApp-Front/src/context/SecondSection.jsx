@@ -3,16 +3,20 @@ import { createContext, useState } from "react";
 export const SecondSectionContext = createContext(null);
 
 const SecondSectionProvider = ({ children }) => {
-  const [currentChatLabel, setCurrentChatLabel] = useState(undefined);
+  const [currentConversationUser, setCurrentConversationUser] =
+    useState(undefined);
   const [dynamicActiveComponent, setDynamicActiveComponent] =
     useState("ChatSection");
   const [sentRequest, setSentRequest] = useState();
   const [receivedRequest, setReceivedRequest] = useState();
+
+  console.log("Curretn chat label ",currentConversationUser);
+
   return (
     <SecondSectionContext.Provider
       value={{
-        currentChatLabel,
-        setCurrentChatLabel,
+        currentConversationUser,
+        setCurrentConversationUser,
         dynamicActiveComponent,
         setDynamicActiveComponent,
         sentRequest,

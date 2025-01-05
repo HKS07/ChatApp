@@ -1,14 +1,15 @@
-import { CgProfile } from "react-icons/cg";
+
 import { GoDeviceCameraVideo } from "react-icons/go";
 import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext } from "react";
 import GlobalContext from "../../context/GlobalContext";
-
+import { SecondSectionContext } from "../../context/SecondSection";
 
 const Header = () => {
-  const {  setActiveChatExtendedSection } =
-    useContext(GlobalContext);
+  const { setActiveChatExtendedSection } = useContext(GlobalContext);
+  const { currentConversationUser } = useContext(SecondSectionContext);
+  
 
   return (
     <div className="relative top-0 flex w-full bg-customGray">
@@ -18,7 +19,7 @@ const Header = () => {
           setActiveChatExtendedSection("ContactProfile");
         }}
       >
-        <CgProfile />
+        <img src={currentConversationUser?.profileUrl} alt="" className="w-10 h-10"/>
       </div>
       <div
         className="flex flex-grow items-center text-customLightWhite cursor-pointer"
@@ -26,7 +27,7 @@ const Header = () => {
           setActiveChatExtendedSection("ContactProfile");
         }}
       >
-        HKS Office
+        {currentConversationUser?.username}
       </div>
       <div className="flex my-1 mx-4 items-center text-customLightWhite text-2xl">
         <div className="p-2">
@@ -34,11 +35,11 @@ const Header = () => {
         </div>
         <div className="p-2">
           <div className="p-2 hover:bg-customDarkWhite hover:rounded-full">
-          <IoIosSearch
-            onClick={() => {
-              setActiveChatExtendedSection("SearchMessage");
-            }}
-          />
+            <IoIosSearch
+              onClick={() => {
+                setActiveChatExtendedSection("SearchMessage");
+              }}
+            />
           </div>
         </div>
         <div className="p-2">

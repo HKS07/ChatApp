@@ -8,18 +8,18 @@ import Login from "./components/Login";
 
 function App() {
   const { oAuthInfo } = useContext(AccountContext);
-  
+
   return (
     <>
-      {oAuthInfo === undefined? (
+      {oAuthInfo === undefined ? (
         <Login />
       ) : (
         <div className="bg-[#262524] m-0 p-0">
           <div className="p-4 flex flex-row  min-h-screen">
-            <NotificationSection/>
+            <NotificationSection />
             <DynamicSection />
-            <MessageSection />
-            <ChatExtendedSection />
+              <MessageSection />
+              <ChatExtendedSection />
           </div>
         </div>
       )}

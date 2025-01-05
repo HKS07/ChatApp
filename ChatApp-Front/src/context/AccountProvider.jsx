@@ -5,7 +5,6 @@ export const AccountContext = createContext(null);
 const AccountProvider = ({ children }) => {
   const [oAuthInfo, setOAuthInfo] = useState();
   const [accountDBInfo, setAccountDBInfo] = useState();
-  // console.log("information fetched at account provider,", accountDBInfo);
 
   return (
     <AccountContext.Provider

@@ -3,51 +3,25 @@ import { IoIosSearch } from "react-icons/io";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
 import { SecondSectionContext } from "../../context/SecondSection";
+import { ContactsContext } from "../../context/ContactsContext";
 import { AccountContext } from "../../context/AccountProvider";
+import { ConversationContext } from "../../context/ConversationContext";
+
 const ChatSection = () => {
   const { setDynamicActiveComponent } = useContext(SecondSectionContext);
+  const { contacts } = useContext(ContactsContext);
   const { accountDBInfo } = useContext(AccountContext);
   const [category, setCategory] = useState("All");
-  const [contacts, setContacts] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
+  const [transformedContacts, setTransformedContacts] = useState();
+  const { conversations } = useContext(ConversationContext);
 
   useEffect(() => {
-    const loadContacts = async () => {
-      if(contacts.length !== 0) return ;
-      const contactFromDB = await fetchContacts();
+    if (!contacts || contacts.length == 0) return;
+    const tempContacts = Object.values(contacts);
+    setTransformedContacts(tempContacts);
+  }, [contacts]);
 
-      if (contactFromDB) {
-        setContacts(contactFromDB);
-      }
-    };
-    if (accountDBInfo) {
-      loadContacts();
-    }
-  }, [accountDBInfo]);
-
-  const fetchContacts = async () => {
-    try {
-      const userId = accountDBInfo.id;
-      const response = await fetch(`http://localhost:8080/contact/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("fetch Contacts: ",data);
-      
-      return data?.contacts; // Return the contacts data
-    } catch (error) {
-      console.error("Failed to fetch contacts:", error);
-      return [];
-    }
-  };
   const handleCategory = (cat) => {
     setCategory(cat);
   };
@@ -113,11 +87,27 @@ const ChatSection = () => {
         </div>
       </div>
       <div className="max-h-[580px] overflow-y-scroll custom-scrollbar">
-        {contacts
-          ? contacts.map((contact) => {
-              return <UserLable key={contact.id} {...contact} />;
-            })
-          : {}}
+        {transformedContacts ? (
+          transformedContacts.map((contact) => {
+            const currentConvo = conversations?.filter((convo) => {
+              return (
+                convo?.participants?.includes(accountDBInfo.id) &&
+                convo?.participants?.includes(contact.id)
+              );
+            });
+            
+            return (
+              <UserLable
+                key={contact.id}
+                {...contact}
+                msg={currentConvo[0]?.lastMessage}
+                convoId={currentConvo[0]?.id}
+              />
+            );
+          })
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
