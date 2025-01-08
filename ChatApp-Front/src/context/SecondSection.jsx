@@ -10,7 +10,7 @@ const SecondSectionProvider = ({ children }) => {
   const [sentRequest, setSentRequest] = useState();
   const [receivedRequest, setReceivedRequest] = useState();
 
-  console.log("Curretn chat label ",currentConversationUser);
+    
 
   return (
     <SecondSectionContext.Provider

@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import MessageSection from "./components/MessageSection";
 import NotificationSection from "./components/NotificationSection";
 import DynamicSection from "./components/DynamicSection";
 import ChatExtendedSection from "./components/ChatExtendedSection";
 import { AccountContext } from "./context/AccountProvider";
 import Login from "./components/Login";
+import MessageContextProvider from "./context/Messagecontext";
 
 function App() {
   const { oAuthInfo } = useContext(AccountContext);
@@ -18,8 +19,10 @@ function App() {
           <div className="p-4 flex flex-row  min-h-screen">
             <NotificationSection />
             <DynamicSection />
+            <MessageContextProvider>
               <MessageSection />
-              <ChatExtendedSection />
+            </MessageContextProvider>
+            <ChatExtendedSection />
           </div>
         </div>
       )}

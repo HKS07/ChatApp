@@ -5,7 +5,7 @@ export const AccountContext = createContext(null);
 const AccountProvider = ({ children }) => {
   const [oAuthInfo, setOAuthInfo] = useState();
   const [accountDBInfo, setAccountDBInfo] = useState();
-
+  
   return (
     <AccountContext.Provider
       value={{ oAuthInfo, setOAuthInfo, accountDBInfo, setAccountDBInfo }}

@@ -4,14 +4,14 @@ import { AccountContext } from "../context/AccountProvider";
 import { SecondSectionContext } from "../context/SecondSection";
 import { useContext } from "react";
 import { ContactsContext } from "../context/ContactsContext";
-import {ConversationContext} from "../context/ConversationContext"
+import { ConversationContext } from "../context/ConversationContext";
 
 const ChatAppWebLogin = () => {
   const { setOAuthInfo, setAccountDBInfo } = useContext(AccountContext);
   const { setSentRequest, setReceivedRequest } =
     useContext(SecondSectionContext);
   const { setContacts } = useContext(ContactsContext);
-  const { setConversations} = useContext(ConversationContext);
+  const { setConversations } = useContext(ConversationContext);
 
   const onLoginError = (res) => {
     console.log("Login Failed", res);
@@ -91,10 +91,9 @@ const ChatAppWebLogin = () => {
         }
       );
       const conversationData = await conversation.json();
-      console.log("inside login: conversation:",conversationData.conversations,typeof conversationData.conversations);
-      
-      if(conversationData?.conversations.length !== 0) setConversations(conversationData?.conversations);
 
+      if (conversationData?.conversations.length !== 0)
+        setConversations(conversationData?.conversations);
     } catch (error) {
       console.log("Getting error:", error);
     }

@@ -18,7 +18,7 @@ export const createConversation = async (req,res) => {
         const newConversation = await prisma.conversations.create({
             data: {
                 participants: [primaryUser.id, secondaryUser.id],
-                lastMessage: "",
+                lastMessage: "Tap to being conversation",
             }
         });
         

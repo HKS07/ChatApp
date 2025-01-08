@@ -55,19 +55,11 @@ model Messages {
   conversationId String
   senderId       String
   content        String
-  timeStamp      DateTime @updatedAt
+  timeStamp      DateTime @updatedAt @default(now())
   readBy         String[]
 }
 
 model Online {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @unique
-}
-
-model messages {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  senderId    String   @db.ObjectId
-  receiverId  String   @db.ObjectId
-  messageText String
-  timeStamp   DateTime @default(now())
 }

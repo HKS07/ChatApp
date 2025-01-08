@@ -1,42 +1,89 @@
 import MessageBox from "./MessageBox";
+import { SecondSectionContext } from "../../context/SecondSection";
+import { useContext, useEffect, useRef } from "react";
+import { AccountContext } from "../../context/AccountProvider";
+import { MessageContext } from "../../context/Messagecontext";
+import { FaAnglesDown } from "react-icons/fa6";
 
 const Body = () => {
-  const lorem =
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.";
+  // const [currentmessages, setCurrentMessages] = useState(null);
+  const { currentConversationUser } = useContext(SecondSectionContext);
+  const { accountDBInfo } = useContext(AccountContext);
+  const { messages, setMessages } = useContext(MessageContext);
+  const messagesEndRef = useRef(null);
+  // console.log(messages);
+
+  const handleScrollDown = () => {
+    if(messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({behavior: "instant"});
+    }
+  }
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversationId: currentConversationUser.convoId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch currentmessages");
+      }
+
+      const formattedMessages = await response.json();
+      return formattedMessages;
+    } catch (error) {
+      console.error("Error fetching currentmessages:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    if(messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({behavior: "smooth"});
+    }
+  },[messages]);
+  useEffect(() => {
+    const loadMessages = async () => {
+      const getMessages = await fetchMessages();
+      if (getMessages.length === 0) {console.log("nothing in currentmessages"); }
+      const message = getMessages?.messages;
+      const sortedMessages = message.sort(
+        (a, b) => new Date(a.timeStamp) - new Date(b.timeStamp)
+      );
+      setMessages(sortedMessages);
+    };
+
+    
+    loadMessages();
+  }, [currentConversationUser]);
+
+  
   return (
-    <div className="flex-grow w-full bg-message-body text-customLightWhite">
-      <div className="flex flex-col  h-[640px] overflow-y-scroll custom-scrollbar">
-        <MessageBox
-          message={lorem}
-          time={"17:24"}
-          isRead={false}
-          byUser={false}
-        />
-        <MessageBox
-          message={"right "}
-          time={"17:24"}
-          isRead={true}
-          byUser={true}
-        />
-        <MessageBox
-          message={lorem}
-          time={"17:24"}
-          isRead={true}
-          byUser={true}
-        />
-        <MessageBox
-          message={"left"}
-          time={"17:24"}
-          isRead={true}
-          byUser={false}
-        />
-        <MessageBox
-          message={lorem}
-          time={"17:24"}
-          isRead={true}
-          byUser={false}
-        />
+    <div className="relative flex-grow w-full bg-message-body text-customLightWhite">
+      <div className=" flex flex-col  h-[640px] overflow-y-scroll custom-scrollbar">
+        <div className="absolute right-0 bottom-0 m-4 rounded-full text-xl outline-none p-1 bg-customGray" onClick={() => handleScrollDown()}>
+          <FaAnglesDown />
+        </div>
+        {messages ? (
+          messages?.map((message) => {
+            const timeNow = new Date(message?.timeStamp)?.toLocaleTimeString("en-IN", {hour: "2-digit", minute:"2-digit", hour12: true});
+            return <MessageBox
+              key={message.id}
+              message={message?.content}
+              time={timeNow}
+              isRead={false}
+              byUser={accountDBInfo.id === message.senderId ? true : false}
+            />;
+          })
+        ) : (
+          <></>
+        )}
+        <div ref={messagesEndRef} />
       </div>
+      
     </div>
   );
 };

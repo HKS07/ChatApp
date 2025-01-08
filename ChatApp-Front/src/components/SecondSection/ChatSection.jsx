@@ -102,6 +102,7 @@ const ChatSection = () => {
                 {...contact}
                 msg={currentConvo[0]?.lastMessage}
                 convoId={currentConvo[0]?.id}
+                updatedAt={currentConvo[0]?.updatedAt}
               />
             );
           })
