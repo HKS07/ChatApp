@@ -4,13 +4,12 @@ import { useContext } from "react";
 import GlobalContext from "../context/GlobalContext";
 
 const ChatExtendedSection = () => {
-  const { activeChatExtendedSection } =
-    useContext(GlobalContext);
+  const { activeChatExtendedSection } = useContext(GlobalContext);
 
   return (
     <>
-      {activeChatExtendedSection === 'ContactProfile' && <ContactProfile />}
-      {activeChatExtendedSection === 'SearchMessage' && <SearchMessage />}
+      {activeChatExtendedSection === "ContactProfile" && <ContactProfile />}
+      {activeChatExtendedSection === "SearchMessage" && <SearchMessage />}
     </>
   );
 };

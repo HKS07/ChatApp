@@ -99,16 +99,6 @@ const AddUserSection = () => {
     );
     
     if (updatedStatus.ok) {
-      //update second section store
-      // if accepted
-      // 1. remove from received requests in the second section context
-      // 2. add this to contacts
-      //    2.1 of sender
-      //    2.2 of reciever
-      //
-      //rejected
-      // 1. remove from received requests in the second section context
-
       const newReceivedRequest = receivedRequest.filter(
         (recReq) => recReq.id !== req.id
       );

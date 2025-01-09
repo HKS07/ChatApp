@@ -5,6 +5,12 @@ import { SecondSectionContext } from "../context/SecondSection";
 import { useContext } from "react";
 import { ContactsContext } from "../context/ContactsContext";
 import { ConversationContext } from "../context/ConversationContext";
+import {
+  fetchUserData,
+  fetchRequestData,
+  fetchContactsData,
+  fetchConversationData,
+} from "./FirstSectionService";
 
 const ChatAppWebLogin = () => {
   const { setOAuthInfo, setAccountDBInfo } = useContext(AccountContext);
@@ -23,79 +29,36 @@ const ChatAppWebLogin = () => {
       setOAuthInfo(decoded);
 
       //Fetching user information
-      const user = await fetch("http://localhost:8080/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          oAuthSub: decoded.sub,
-          username: decoded.name,
-          profileUrl: decoded.picture,
-          email: decoded.email,
-        }),
+      const userData = await fetchUserData({
+        oAuthSub: decoded.sub,
+        username: decoded.name,
+        profileUrl: decoded.picture,
+        email: decoded.email,
       });
-
-      const userData = await user.json();
-
       setAccountDBInfo(userData.user);
 
       //Fetching user requests
-      const fetchRequests = await fetch(
-        "http://localhost:8080/requests/getRequests",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: userData.user.id }),
-        }
+      const requests = await fetchRequestData({ userId: userData.user.id });
+      const sentRequest = requests?.request?.filter(
+        (req) => req.senderEmail === decoded.email
       );
-
-      const requests = await fetchRequests.json();
-
-      if (requests) {
-        const sentRequest = requests?.request?.filter(
-          (req) => req.senderEmail === decoded.email
-        );
-        const receivedRequest = requests?.request?.filter(
-          (req) => req.receiverEmail === decoded.email
-        );
-        setSentRequest(sentRequest);
-        setReceivedRequest(receivedRequest);
-      }
+      const receivedRequest = requests?.request?.filter(
+        (req) => req.receiverEmail === decoded.email
+      );
+      setSentRequest(sentRequest);
+      setReceivedRequest(receivedRequest);
 
       //fetching user contacts
-      const userContacts = await fetch(
-        `http://localhost:8080/contact/${userData.user.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const userContactsData = await userContacts.json();
+      const userContactsData = await fetchContactsData(userData.user.id);
       setContacts(userContactsData.contacts);
 
       //fetch all the conversations
-      const conversation = await fetch(
-        "http://localhost:8080/conversation/getAll",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: userData.user.id }),
-        }
-      );
-      const conversationData = await conversation.json();
-
-      if (conversationData?.conversations.length !== 0)
-        setConversations(conversationData?.conversations);
+      const conversationData = await fetchConversationData({
+        userId: userData.user.id,
+      });
+      setConversations(conversationData?.conversations || []);
     } catch (error) {
-      console.log("Getting error:", error);
+      console.error("Error during login process:", error);
     }
   };
   return (

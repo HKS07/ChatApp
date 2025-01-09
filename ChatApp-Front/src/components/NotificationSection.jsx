@@ -5,7 +5,8 @@ import Banner from "./Utils/Banner";
 import { useContext, useState } from "react";
 import { SecondSectionContext } from "../context/SecondSection";
 const NotificationSection = () => {
-  const {dynamicActiveComponent, setDynamicActiveComponent} = useContext(SecondSectionContext);
+  const { dynamicActiveComponent, setDynamicActiveComponent } =
+    useContext(SecondSectionContext);
   const [currentHovered, setCurrentHovered] = useState(undefined);
   return (
     <div className="flex flex-col justify-between py-4 w-16 bg-customGray border-r border-[#3c4850]">
@@ -19,7 +20,10 @@ const NotificationSection = () => {
             <BiMessageDetail />
           </div>
         ) : (
-          <div className="p-2" onClick={() => setDynamicActiveComponent("ChatSection")}>
+          <div
+            className="p-2"
+            onClick={() => setDynamicActiveComponent("ChatSection")}
+          >
             {" "}
             <BiMessageDetail />
           </div>
