@@ -1,15 +1,15 @@
-import { useContext } from "react";
 import MessageSection from "./components/MessageSection";
 import NotificationSection from "./components/NotificationSection";
 import DynamicSection from "./components/DynamicSection";
 import ChatExtendedSection from "./components/ChatExtendedSection";
-import { AccountContext } from "./context/AccountProvider";
 import Login from "./components/Login";
 import MessageContextProvider from "./context/Messagecontext";
+import { useSelector } from "react-redux";
 
 function App() {
-  const { oAuthInfo } = useContext(AccountContext);
-
+  // const { oAuthInfo } = useContext(AccountContext);
+  const oAuthInfo = useSelector((state) => state.account.oAuthInfo);
+  
   return (
     <>
       {oAuthInfo === undefined ? (

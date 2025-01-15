@@ -1,23 +1,22 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { AccountContext } from "../context/AccountProvider";
 import { SecondSectionContext } from "../context/SecondSection";
 import { useContext } from "react";
-import { ContactsContext } from "../context/ContactsContext";
-import { ConversationContext } from "../context/ConversationContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setConversations } from "../features/conversationsSlice";
 import {
   fetchUserData,
   fetchRequestData,
   fetchContactsData,
   fetchConversationData,
 } from "./FirstSectionService";
+import { setAccountDBInfo, setOAuthInfo } from "../features/accountSlice";
+import { setContacts } from "../features/contactsSlice";
 
 const ChatAppWebLogin = () => {
-  const { setOAuthInfo, setAccountDBInfo } = useContext(AccountContext);
+  const dispatch = useDispatch();
   const { setSentRequest, setReceivedRequest } =
     useContext(SecondSectionContext);
-  const { setContacts } = useContext(ContactsContext);
-  const { setConversations } = useContext(ConversationContext);
 
   const onLoginError = (res) => {
     console.log("Login Failed", res);
@@ -26,7 +25,8 @@ const ChatAppWebLogin = () => {
   const onLoginSuccess = async (res) => {
     try {
       const decoded = jwtDecode(res.credential);
-      setOAuthInfo(decoded);
+      // setOAuthInfo(decoded);
+      dispatch(setOAuthInfo(decoded));
 
       //Fetching user information
       const userData = await fetchUserData({
@@ -35,7 +35,9 @@ const ChatAppWebLogin = () => {
         profileUrl: decoded.picture,
         email: decoded.email,
       });
-      setAccountDBInfo(userData.user);
+      
+      // setAccountDBInfo(userData.user);
+      dispatch(setAccountDBInfo(userData.user));
 
       //Fetching user requests
       const requests = await fetchRequestData({ userId: userData.user.id });
@@ -50,17 +52,21 @@ const ChatAppWebLogin = () => {
 
       //fetching user contacts
       const userContactsData = await fetchContactsData(userData.user.id);
-      setContacts(userContactsData.contacts);
+      dispatch(setContacts(userContactsData.contacts));
 
       //fetch all the conversations
       const conversationData = await fetchConversationData({
         userId: userData.user.id,
       });
-      setConversations(conversationData?.conversations || []);
+      // setConversations(conversationData?.conversations || []);
+      dispatch(setConversations(conversationData?.conversations || []));
+
     } catch (error) {
       console.error("Error during login process:", error);
     }
   };
+
+
   return (
     <div className="flex justify-center items-center h-screen bg-[#FCF5EB]">
       <div className="bg-white rounded-lg shadow-md p-8 flex items-center max-w-2xl w-full">

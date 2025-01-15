@@ -3,18 +3,18 @@ import { IoIosSearch } from "react-icons/io";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
 import { SecondSectionContext } from "../../context/SecondSection";
-import { ContactsContext } from "../../context/ContactsContext";
-import { AccountContext } from "../../context/AccountProvider";
-import { ConversationContext } from "../../context/ConversationContext";
+import { useSelector } from "react-redux";
 
 const ChatSection = () => {
   const { setDynamicActiveComponent } = useContext(SecondSectionContext);
-  const { contacts } = useContext(ContactsContext);
-  const { accountDBInfo } = useContext(AccountContext);
+  const contacts = useSelector(state => state.contact.contacts);
+  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
   const [category, setCategory] = useState("All");
   const [isHovered, setIsHovered] = useState(false);
   const [transformedContacts, setTransformedContacts] = useState();
-  const { conversations } = useContext(ConversationContext);
+  // const { conversations } = useContext(ConversationContext);
+  const conversations = useSelector(state => state.conversation.conversations);
+  
 
   useEffect(() => {
     if (!contacts || contacts.length == 0) return;

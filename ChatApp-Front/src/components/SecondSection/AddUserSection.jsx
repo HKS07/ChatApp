@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";
-import { AccountContext } from "./../../context/AccountProvider";
 import { SecondSectionContext } from "../../context/SecondSection";
-import { ConversationContext } from "../../context/ConversationContext";
+import { useDispatch, useSelector } from "react-redux";
+import { addConversation } from "../../features/conversationsSlice";
 
 const handleStatusUI = (status) => {
   const pending = "text-yellow-500 border border-yellow-500";
@@ -53,10 +53,11 @@ const ReceiveRequestLabel = ({ req, updateStatus }) => {
 };
 
 const AddUserSection = () => {
-  const { accountDBInfo } = useContext(AccountContext);
+  const dispatch = useDispatch();
+  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
   const { sentRequest, receivedRequest, setReceivedRequest } =
     useContext(SecondSectionContext);
-  const {conversations, setConversations} = useContext(ConversationContext);
+  // const { conversations, setConversations } = useContext(ConversationContext);
 
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
@@ -97,7 +98,7 @@ const AddUserSection = () => {
         }),
       }
     );
-    
+
     if (updatedStatus.ok) {
       const newReceivedRequest = receivedRequest.filter(
         (recReq) => recReq.id !== req.id
@@ -120,25 +121,24 @@ const AddUserSection = () => {
         //create new chat and put chat id to both the user.
         //think more before writing this code!!!!!!!
 
-        
-        const addConversation = await fetch("http://localhost:8080/conversation", {
-            method: "POST",
-            headers: {
+        const conversationResponse = await fetch("http://localhost:8080/conversation", {
+          method: "POST",
+          headers: {
               "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+          },
+          body: JSON.stringify({
               primaryUserEmail: accountDBInfo.email,
               secondryUserEmail: req.senderEmail,
-            }),
-          });
+          }),
+      });
+      
+      const convo = await conversationResponse.json();
 
-        const convo = await addConversation.json();
-        
-        const currentConversation = conversations;
-        currentConversation.push( convo.conversations);
-        setConversations(currentConversation);
-        
-        
+        // const currentConversation = conversations;
+        // currentConversation.push(convo.conversations);
+        // setConversations(currentConversation);
+
+        dispatch(addConversation(convo));
       }
     }
   };

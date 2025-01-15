@@ -8,6 +8,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import SecondSectionProvider from "./context/SecondSection.jsx";
 import ContactsContextProvider from "./context/ContactsContext.jsx";
 import ConversationContextProvider from "./context/ConversationContext.jsx";
+import { Provider } from "react-redux";
+import store from "./store/index.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,7 +19,9 @@ createRoot(document.getElementById("root")).render(
           <SecondSectionProvider>
             <ContactsContextProvider>
               <ConversationContextProvider>
-                <App />
+                <Provider store={store}>
+                  <App />
+                </Provider>
               </ConversationContextProvider>
             </ContactsContextProvider>
           </SecondSectionProvider>

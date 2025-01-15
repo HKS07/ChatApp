@@ -4,14 +4,14 @@ import { FaMicrophone } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
 import { useState, useContext } from "react";
 import { SecondSectionContext } from "../../context/SecondSection";
-import { AccountContext } from "../../context/AccountProvider";
 import { MessageContext } from "../../context/Messagecontext";
 import { ConversationContext } from "../../context/ConversationContext";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
   const [typedMessage, setTypedMessage] = useState("");
   const { currentConversationUser } = useContext(SecondSectionContext);
-  const { accountDBInfo } = useContext(AccountContext);
+  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
   const { messages, setMessages } = useContext(MessageContext);
   const { conversations, setConversations } = useContext(ConversationContext);
 

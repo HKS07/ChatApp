@@ -1,14 +1,14 @@
 import MessageBox from "./MessageBox";
 import { SecondSectionContext } from "../../context/SecondSection";
 import { useContext, useEffect, useRef } from "react";
-import { AccountContext } from "../../context/AccountProvider";
 import { MessageContext } from "../../context/Messagecontext";
 import { FaAnglesDown } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const Body = () => {
   // const [currentmessages, setCurrentMessages] = useState(null);
   const { currentConversationUser } = useContext(SecondSectionContext);
-  const { accountDBInfo } = useContext(AccountContext);
+  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
   const { messages, setMessages } = useContext(MessageContext);
   const messagesEndRef = useRef(null);
   // console.log(messages);
