@@ -4,6 +4,8 @@ import { SecondSectionContext } from "../context/SecondSection";
 import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setConversations } from "../features/conversationsSlice";
+import { setSentRequest } from "../features/secondSectionSlice";
+import { setReceivedRequest } from "../features/secondSectionSlice";
 import {
   fetchUserData,
   fetchRequestData,
@@ -15,8 +17,8 @@ import { setContacts } from "../features/contactsSlice";
 
 const ChatAppWebLogin = () => {
   const dispatch = useDispatch();
-  const { setSentRequest, setReceivedRequest } =
-    useContext(SecondSectionContext);
+  // const {  setReceivedRequest } =
+  //   useContext(SecondSectionContext);
 
   const onLoginError = (res) => {
     console.log("Login Failed", res);
@@ -47,8 +49,8 @@ const ChatAppWebLogin = () => {
       const receivedRequest = requests?.request?.filter(
         (req) => req.receiverEmail === decoded.email
       );
-      setSentRequest(sentRequest);
-      setReceivedRequest(receivedRequest);
+      dispatch(setSentRequest(sentRequest));
+      dispatch(setReceivedRequest(receivedRequest));
 
       //fetching user contacts
       const userContactsData = await fetchContactsData(userData.user.id);

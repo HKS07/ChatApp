@@ -1,30 +1,34 @@
-
 import { GoDeviceCameraVideo } from "react-icons/go";
 import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext } from "react";
-import GlobalContext from "../../context/GlobalContext";
 import { SecondSectionContext } from "../../context/SecondSection";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveChatExtendedSection } from "../../features/globalSlice";
 
 const Header = () => {
-  const { setActiveChatExtendedSection } = useContext(GlobalContext);
-  const { currentConversationUser } = useContext(SecondSectionContext);
-  
+  const dispatch = useDispatch();
+  // const { currentConversationUser } = useContext(SecondSectionContext);
+  const currentConversationUser = useSelector(state => state.secondSection.currentConversationUser)
 
   return (
     <div className="relative top-0 flex w-full bg-customGray">
       <div
         className="mx-3 my-3 text-4xl text-customLightWhite cursor-pointer"
         onClick={() => {
-          setActiveChatExtendedSection("ContactProfile");
+          dispatch(setActiveChatExtendedSection("ContactProfile"));
         }}
       >
-        <img src={currentConversationUser?.profileUrl} alt="" className="w-10 h-10"/>
+        <img
+          src={currentConversationUser?.profileUrl}
+          alt=""
+          className="w-10 h-10"
+        />
       </div>
       <div
         className="flex flex-grow items-center text-customLightWhite cursor-pointer"
         onClick={() => {
-          setActiveChatExtendedSection("ContactProfile");
+          dispatch(setActiveChatExtendedSection("ContactProfile"));
         }}
       >
         {currentConversationUser?.username}
@@ -37,7 +41,7 @@ const Header = () => {
           <div className="p-2 hover:bg-customDarkWhite hover:rounded-full">
             <IoIosSearch
               onClick={() => {
-                setActiveChatExtendedSection("SearchMessage");
+                dispatch(setActiveChatExtendedSection("SearchMessage"));
               }}
             />
           </div>

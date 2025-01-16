@@ -1,16 +1,20 @@
 import MessageBox from "./MessageBox";
 import { SecondSectionContext } from "../../context/SecondSection";
 import { useContext, useEffect, useRef } from "react";
-import { MessageContext } from "../../context/Messagecontext";
 import { FaAnglesDown } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessages } from "../../features/messagesSlice";
 
 const Body = () => {
+  const dispatch = useDispatch();
   // const [currentmessages, setCurrentMessages] = useState(null);
-  const { currentConversationUser } = useContext(SecondSectionContext);
+  // const { currentConversationUser } = useContext(SecondSectionContext);
+  const currentConversationUser = useSelector(state => state.secondSection.currentConversationUser);
   const accountDBInfo = useSelector(state => state.account.accountDBInfo);
-  const { messages, setMessages } = useContext(MessageContext);
+  // const { messages, setMessages } = useContext(MessageContext);
+  const messages = useSelector(state => state.message.messages);
   const messagesEndRef = useRef(null);
+  
   // console.log(messages);
 
   const handleScrollDown = () => {
@@ -45,6 +49,7 @@ const Body = () => {
       messagesEndRef.current.scrollIntoView({behavior: "smooth"});
     }
   },[messages]);
+
   useEffect(() => {
     const loadMessages = async () => {
       const getMessages = await fetchMessages();
@@ -53,7 +58,7 @@ const Body = () => {
       const sortedMessages = message.sort(
         (a, b) => new Date(a.timeStamp) - new Date(b.timeStamp)
       );
-      setMessages(sortedMessages);
+      dispatch(setMessages(sortedMessages));
     };
 
     

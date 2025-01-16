@@ -2,11 +2,10 @@ import AddUserSection from "./SecondSection/AddUserSection";
 import ChatSection from "./SecondSection/ChatSection";
 import ProfileSection from "./SecondSection/ProfileSection";
 import SettingsSection from "./SecondSection/SettingsSection";
-import { SecondSectionContext } from "../context/SecondSection";
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 
 const DynamicSection = () => {
-  const { dynamicActiveComponent } = useContext(SecondSectionContext);
+  const dynamicActiveComponent = useSelector(state => state.secondSection.dynamicActiveComponent);
   return (
     <>
       {dynamicActiveComponent === "ChatSection" && <ChatSection />}

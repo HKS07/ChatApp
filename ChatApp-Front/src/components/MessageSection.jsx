@@ -1,12 +1,12 @@
 import Body from "./ThirdSection/Body";
 import Footer from "./ThirdSection/Footer";
 import Header from "./ThirdSection/Header";
-import { SecondSectionContext } from "../context/SecondSection";
-import { useContext } from "react";
 import Default from "./ThirdSection/Default";
+import { useSelector } from "react-redux";
 
 const MessageSection = () => {
-  const { currentConversationUser } = useContext(SecondSectionContext);
+  const currentConversationUser = useSelector(state => state.secondSection.currentConversationUser);
+
   return (
     <>
       {currentConversationUser === undefined ? (

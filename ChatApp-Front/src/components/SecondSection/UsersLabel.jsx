@@ -1,5 +1,5 @@
-import { SecondSectionContext } from "../../context/SecondSection";
-import { useContext } from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentConversationUser } from "../../features/secondSectionSlice";
 
 const getDateTime = (isoDateString) => {
   const messageDateObj = new Date(isoDateString);
@@ -20,16 +20,18 @@ const getDateTime = (isoDateString) => {
 };
 
 const UserLable = ({ id, username, profileUrl, msg, convoId, updatedAt }) => {
-  const { setCurrentConversationUser } = useContext(SecondSectionContext);
+  const dispatch = useDispatch();
   const dateTime = getDateTime(updatedAt);
 
   const onClickSetLabel = (id, username, profileUrl, convoId) => {
-    setCurrentConversationUser({
-      id: id,
-      username: username,
-      profileUrl: profileUrl,
-      convoId: convoId,
-    });
+    dispatch(
+      setCurrentConversationUser({
+        id: id,
+        username: username,
+        profileUrl: profileUrl,
+        convoId: convoId,
+      })
+    );
   };
   return (
     <div

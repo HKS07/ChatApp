@@ -2,18 +2,20 @@ import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { FaMicrophone } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
-import { useState, useContext } from "react";
-import { SecondSectionContext } from "../../context/SecondSection";
-import { MessageContext } from "../../context/Messagecontext";
-import { ConversationContext } from "../../context/ConversationContext";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setConversations } from "../../features/conversationsSlice";
+import { setMessages } from "../../features/messagesSlice";
 
 const Footer = () => {
+  const dispatch = useDispatch();
   const [typedMessage, setTypedMessage] = useState("");
-  const { currentConversationUser } = useContext(SecondSectionContext);
+  const currentConversationUser = useSelector(state => state.secondSection.currentConversationUser);
+
   const accountDBInfo = useSelector(state => state.account.accountDBInfo);
-  const { messages, setMessages } = useContext(MessageContext);
-  const { conversations, setConversations } = useContext(ConversationContext);
+  const messages = useSelector(state => state.message.messages);
+  const conversations = useSelector(state => state.conversation.conversations);
+
 
   const sendMessage = async () => {
     try {
@@ -27,19 +29,22 @@ const Footer = () => {
         }),
       });
       const jsonMessaggeSent = await messageSent.json();
-      console.log("api", jsonMessaggeSent);
 
       if (messageSent.ok) {
-        setMessages([...(messages || []), jsonMessaggeSent?.newMessage]);
+        dispatch(setMessages([...(messages || []), jsonMessaggeSent?.newMessage]));
 
         const updatedConvo = conversations.map((convo) => {
           if (convo.id === currentConversationUser.convoId) {
-            convo.lastMessage = typedMessage;
-            convo.updatedAt = new Date();
-            return convo;
-          } else return convo;
+            return {
+              ...convo,
+              lastMessage: typedMessage,
+              updatedAt: (new Date()).toString(), // Convert Date to ISO string
+            };
+          }
+          return convo;
         });
-        setConversations(updatedConvo);
+        // setConversations(updatedConvo);
+        dispatch(setConversations(updatedConvo));
         setTypedMessage("");
       }
     } catch (error) {

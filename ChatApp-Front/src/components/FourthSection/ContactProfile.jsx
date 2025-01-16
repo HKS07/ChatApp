@@ -3,16 +3,19 @@ import Profile from "../../assets/Profile.png";
 import { FaRegHeart } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdBlock } from "react-icons/md";
-import { useContext } from "react";
-import GlobalContext from "../../context/GlobalContext";
+import { useDispatch } from "react-redux";
+import { setActiveChatExtendedSection } from "../../features/globalSlice";
 // import { IoHeartDislikeOutline } from "react-icons/io5";
 
 const ContactProfile = () => {
-  const {setActiveChatExtendedSection} = useContext(GlobalContext)
+  const dispatch = useDispatch();
   return (
     <div className="w-[446px] bg-[#0C1317]">
       <div className="flex items-center gap-8 bg-customBlack">
-        <div className="text-2xl text-customDarkWhite m-5 cursor-pointer" onClick={() => setActiveChatExtendedSection('')}>
+        <div
+          className="text-2xl text-customDarkWhite m-5 cursor-pointer"
+          onClick={() => dispatch(setActiveChatExtendedSection(""))}
+        >
           <IoClose />
         </div>
         <div className="flex-grow text-customLightWhite text-xl">

@@ -1,15 +1,18 @@
 import { IoClose } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
 import { IoIosSearch } from "react-icons/io";
-import { useContext } from "react";
-import GlobalContext from "../../context/GlobalContext"
+import { useDispatch } from "react-redux";
+import { setActiveChatExtendedSection } from "../../features/globalSlice";
 
 const SearchMessage = () => {
-  const {setActiveChatExtendedSection} = useContext(GlobalContext);
+  const dispatch = useDispatch();
   return (
     <div className="w-[446px] bg-customBlack">
       <div className="flex items-center m-5 gap-8">
-        <div className="text-2xl text-customDarkWhite cursor-pointer" onClick={() => setActiveChatExtendedSection('')}>
+        <div
+          className="text-2xl text-customDarkWhite cursor-pointer"
+          onClick={() => dispatch(setActiveChatExtendedSection(""))}
+        >
           <IoClose />
         </div>
         <div className="flex-grow text-customLightWhite text-xl">
@@ -30,7 +33,9 @@ const SearchMessage = () => {
           />
         </div>
       </div>
-      <div className="flex justify-center items-center min-h-40 text-customDarkWhite text-sm">Search for messages with HKS Office</div>
+      <div className="flex justify-center items-center min-h-40 text-customDarkWhite text-sm">
+        Search for messages with HKS Office
+      </div>
     </div>
   );
 };

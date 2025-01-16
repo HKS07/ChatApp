@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
-import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";
-import { SecondSectionContext } from "../../context/SecondSection";
+import { useState } from "react";
+import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";;
 import { useDispatch, useSelector } from "react-redux";
 import { addConversation } from "../../features/conversationsSlice";
+import { setReceivedRequest } from "../../features/secondSectionSlice";
 
 const handleStatusUI = (status) => {
   const pending = "text-yellow-500 border border-yellow-500";
@@ -55,14 +55,10 @@ const ReceiveRequestLabel = ({ req, updateStatus }) => {
 const AddUserSection = () => {
   const dispatch = useDispatch();
   const accountDBInfo = useSelector(state => state.account.accountDBInfo);
-  const { sentRequest, receivedRequest, setReceivedRequest } =
-    useContext(SecondSectionContext);
-  // const { conversations, setConversations } = useContext(ConversationContext);
-
+  const sentRequest = useSelector(state => state.secondSection.sentRequest);
+  const receivedRequest = useSelector(state => state.secondSection.receivedRequest);
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
-  // const [isSentSucceed, setIsSentSucceed] = useState();
-  // console.log("sender request",sentRequest,"received request",receivedRequest);
 
   const handleCategory = (type) => {
     setCategory(type);
@@ -103,7 +99,7 @@ const AddUserSection = () => {
       const newReceivedRequest = receivedRequest.filter(
         (recReq) => recReq.id !== req.id
       );
-      setReceivedRequest(newReceivedRequest);
+      dispatch(setReceivedRequest(newReceivedRequest));
 
       if (status === "Accepted") {
         // this will add user to accepter contact

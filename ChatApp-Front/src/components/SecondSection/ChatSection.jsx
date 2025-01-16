@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
-import { SecondSectionContext } from "../../context/SecondSection";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {setDynamicActiveComponent} from '../../features/secondSectionSlice'
 
 const ChatSection = () => {
-  const { setDynamicActiveComponent } = useContext(SecondSectionContext);
+  const dispatch = useDispatch();
   const contacts = useSelector(state => state.contact.contacts);
   const accountDBInfo = useSelector(state => state.account.accountDBInfo);
   const [category, setCategory] = useState("All");
@@ -32,7 +32,7 @@ const ChatSection = () => {
         <div className="relative flex items-center">
           <LuMessageSquarePlus
             className="mx-5 text-2xl cursor-pointer"
-            onClick={() => setDynamicActiveComponent("AddUserSection")}
+            onClick={() => dispatch(setDynamicActiveComponent("AddUserSection"))}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           />

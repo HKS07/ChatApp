@@ -3,10 +3,13 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import Banner from "./Utils/Banner";
 import { useContext, useState } from "react";
-import { SecondSectionContext } from "../context/SecondSection";
+import { useSelector, useDispatch } from "react-redux";
+import { setDynamicActiveComponent } from "../features/secondSectionSlice";
+
 const NotificationSection = () => {
-  const { dynamicActiveComponent, setDynamicActiveComponent } =
-    useContext(SecondSectionContext);
+  const dispatch = useDispatch();
+  const dynamicActiveComponent = useSelector(state => state.secondSection.dynamicActiveComponent);
+
   const [currentHovered, setCurrentHovered] = useState(undefined);
   return (
     <div className="flex flex-col justify-between py-4 w-16 bg-customGray border-r border-[#3c4850]">
@@ -22,7 +25,7 @@ const NotificationSection = () => {
         ) : (
           <div
             className="p-2"
-            onClick={() => setDynamicActiveComponent("ChatSection")}
+            onClick={() => dispatch(setDynamicActiveComponent("ChatSection"))}
           >
             {" "}
             <BiMessageDetail />
@@ -44,7 +47,7 @@ const NotificationSection = () => {
           ) : (
             <div
               className="p-2"
-              onClick={() => setDynamicActiveComponent("SettingsSection")}
+              onClick={() => dispatch(setDynamicActiveComponent("SettingsSection"))}
             >
               {" "}
               <IoSettingsOutline />
@@ -65,7 +68,7 @@ const NotificationSection = () => {
           ) : (
             <div
               className="p-2"
-              onClick={() => setDynamicActiveComponent("ProfileSection")}
+              onClick={() => dispatch(setDynamicActiveComponent("ProfileSection"))}
             >
               {" "}
               <CgProfile />
