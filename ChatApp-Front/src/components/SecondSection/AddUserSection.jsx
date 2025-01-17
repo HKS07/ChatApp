@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";;
+import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addConversation } from "../../features/conversationsSlice";
 import { setReceivedRequest } from "../../features/secondSectionSlice";
+import {
+  sendRequestCall,
+  updateStatusCall,
+  addNewContactCall,
+  createConversationCall,
+} from "./Service";
 
 const handleStatusUI = (status) => {
   const pending = "text-yellow-500 border border-yellow-500";
@@ -54,9 +60,11 @@ const ReceiveRequestLabel = ({ req, updateStatus }) => {
 
 const AddUserSection = () => {
   const dispatch = useDispatch();
-  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
-  const sentRequest = useSelector(state => state.secondSection.sentRequest);
-  const receivedRequest = useSelector(state => state.secondSection.receivedRequest);
+  const accountDBInfo = useSelector((state) => state.account.accountDBInfo);
+  const sentRequest = useSelector((state) => state.secondSection.sentRequest);
+  const receivedRequest = useSelector(
+    (state) => state.secondSection.receivedRequest
+  );
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
 
@@ -66,34 +74,20 @@ const AddUserSection = () => {
 
   const handleSendRequest = async () => {
     try {
-      const sendRequest = await fetch(
-        "http://localhost:8080/requests/sendRequest",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            senderEmail: accountDBInfo.email,
-            receiverEmail: emailId,
-          }),
-        }
-      );
+      const sendRequest = await sendRequestCall({
+        senderEmail: accountDBInfo.email,
+        receiverEmail: emailId,
+      });
     } catch (error) {
-      console.log("error while sending request", error);
+      console.log("error while sending request", error.message);
     }
   };
 
   const updateStatus = async (status, req) => {
-    const updatedStatus = await fetch(
-      "http://localhost:8080/requests/updateStatus",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status: status,
-          reqId: req.id,
-        }),
-      }
-    );
+    const updatedStatus = await updateStatusCall({
+      status: status,
+      reqId: req.id,
+    });
 
     if (updatedStatus.ok) {
       const newReceivedRequest = receivedRequest.filter(
@@ -102,37 +96,17 @@ const AddUserSection = () => {
       dispatch(setReceivedRequest(newReceivedRequest));
 
       if (status === "Accepted") {
-        // this will add user to accepter contact
-        const addNewContact = await fetch("http://localhost:8080/contact", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userAEmailId: accountDBInfo.email,
-            userBEmailId: req.senderEmail,
-          }),
+        await addNewContactCall({
+          userAEmailId: accountDBInfo.email,
+          userBEmailId: req.senderEmail,
         });
 
-        //create new chat and put chat id to both the user.
-        //think more before writing this code!!!!!!!
+        const conversationResponse = await createConversationCall({
+          primaryUserEmail: accountDBInfo.email,
+          secondryUserEmail: req.senderEmail,
+        });
 
-        const conversationResponse = await fetch("http://localhost:8080/conversation", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-              primaryUserEmail: accountDBInfo.email,
-              secondryUserEmail: req.senderEmail,
-          }),
-      });
-      
-      const convo = await conversationResponse.json();
-
-        // const currentConversation = conversations;
-        // currentConversation.push(convo.conversations);
-        // setConversations(currentConversation);
+        const convo = await conversationResponse.json();
 
         dispatch(addConversation(convo));
       }
