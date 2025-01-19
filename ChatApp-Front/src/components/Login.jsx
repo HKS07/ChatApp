@@ -1,8 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { SecondSectionContext } from "../context/SecondSection";
-import { useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setConversations } from "../features/conversationsSlice";
 import { setSentRequest } from "../features/secondSectionSlice";
 import { setReceivedRequest } from "../features/secondSectionSlice";
@@ -60,8 +58,10 @@ const ChatAppWebLogin = () => {
       const conversationData = await fetchConversationData({
         userId: userData.user.id,
       });
-      // setConversations(conversationData?.conversations || []);
+      
       dispatch(setConversations(conversationData?.conversations || []));
+
+
 
     } catch (error) {
       console.error("Error during login process:", error);
