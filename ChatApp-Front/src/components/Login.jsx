@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setConversations } from "../features/conversationsSlice";
 import { setSentRequest } from "../features/secondSectionSlice";
 import { setReceivedRequest } from "../features/secondSectionSlice";
+import { createSocketConnection, getSocket } from "../services/socketService";
 import {
   fetchUserData,
   fetchRequestData,
@@ -35,7 +36,7 @@ const ChatAppWebLogin = () => {
         profileUrl: decoded.picture,
         email: decoded.email,
       });
-      
+
       // setAccountDBInfo(userData.user);
       dispatch(setAccountDBInfo(userData.user));
 
@@ -58,16 +59,29 @@ const ChatAppWebLogin = () => {
       const conversationData = await fetchConversationData({
         userId: userData.user.id,
       });
-      
+
       dispatch(setConversations(conversationData?.conversations || []));
 
+      // console.log(decoded,userData);
 
+      // //Creating socket connection
+      const socket = createSocketConnection(
+        userData.user.email,
+        userData.user.oAuthSub,
+        userData.user.contacts
+      );
+      // console.log(socket);
+      
+      const curSocket = getSocket();
+      
+      socket.emit("checkAllContactsStatus", (data) => console.log(data))
 
+      // console.log(currentOnlineContacts);
+      
     } catch (error) {
       console.error("Error during login process:", error);
     }
   };
-
 
   return (
     <div className="flex justify-center items-center h-screen bg-[#FCF5EB]">
