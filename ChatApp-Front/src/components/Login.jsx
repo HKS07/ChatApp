@@ -1,24 +1,20 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
-import { setConversations } from "../features/conversationsSlice";
-import { setSentRequest } from "../features/secondSectionSlice";
-import { setReceivedRequest } from "../features/secondSectionSlice";
-import { createSocketConnection, getSocket } from "../services/socketService";
+import { setConversations } from "../features/slices/conversationsSlice";
+import { setSentRequest } from "../features/slices/secondSectionSlice";
+import { setReceivedRequest } from "../features/slices/secondSectionSlice";
 import {
   fetchUserData,
   fetchRequestData,
   fetchContactsData,
   fetchConversationData,
 } from "./FirstSectionService";
-import { setAccountDBInfo, setOAuthInfo } from "../features/accountSlice";
-import { setContacts } from "../features/contactsSlice";
+import { setAccountDBInfo, setOAuthInfo } from "../features/slices/accountSlice";
+import { setContacts } from "../features/slices/contactsSlice";
 
 const ChatAppWebLogin = () => {
   const dispatch = useDispatch();
-  // const {  setReceivedRequest } =
-  //   useContext(SecondSectionContext);
-
   const onLoginError = (res) => {
     console.log("Login Failed", res);
   };
@@ -36,7 +32,7 @@ const ChatAppWebLogin = () => {
         profileUrl: decoded.picture,
         email: decoded.email,
       });
-
+      
       // setAccountDBInfo(userData.user);
       dispatch(setAccountDBInfo(userData.user));
 
@@ -62,22 +58,6 @@ const ChatAppWebLogin = () => {
 
       dispatch(setConversations(conversationData?.conversations || []));
 
-      // console.log(decoded,userData);
-
-      // //Creating socket connection
-      const socket = createSocketConnection(
-        userData.user.email,
-        userData.user.oAuthSub,
-        userData.user.contacts
-      );
-      // console.log(socket);
-      
-      const curSocket = getSocket();
-      
-      socket.emit("checkAllContactsStatus", (data) => console.log(data))
-
-      // console.log(currentOnlineContacts);
-      
     } catch (error) {
       console.error("Error during login process:", error);
     }

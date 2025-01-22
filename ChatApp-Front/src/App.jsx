@@ -4,12 +4,33 @@ import DynamicSection from "./components/DynamicSection";
 import ChatExtendedSection from "./components/ChatExtendedSection";
 import Login from "./components/Login";
 import MessageContextProvider from "./context/Messagecontext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { initializeSocket } from "./services/socketService";
+import { registerSocketListeners } from "./features/socketManager";
 
 function App() {
   // const { oAuthInfo } = useContext(AccountContext);
+  const dispatch = useDispatch();
   const oAuthInfo = useSelector((state) => state.account.oAuthInfo);
+  const accountDBInfo = useSelector((state) => state.account.accountDBInfo);
   
+  useEffect(() => {
+    if (accountDBInfo) {
+      const socket = initializeSocket(
+        accountDBInfo.email,
+        accountDBInfo.oAuthSub,
+        accountDBInfo.contacts,
+        accountDBInfo.id
+      );
+      console.log("my id", socket.id);
+      
+      registerSocketListeners(socket,dispatch);
+
+      //getting all connected contacts
+      socket.emit("getAllContactsStatus");
+    }
+  }, [accountDBInfo]);
   return (
     <>
       {oAuthInfo === undefined ? (

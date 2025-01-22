@@ -3,7 +3,7 @@ import { SecondSectionContext } from "../../context/SecondSection";
 import { useContext, useEffect, useRef } from "react";
 import { FaAnglesDown } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../../features/messagesSlice";
+import { setMessages } from "../../features/slices/messagesSlice";
 
 const Body = () => {
   const dispatch = useDispatch();

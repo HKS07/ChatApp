@@ -2,7 +2,7 @@ import { IoClose } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
 import { IoIosSearch } from "react-icons/io";
 import { useDispatch } from "react-redux";
-import { setActiveChatExtendedSection } from "../../features/globalSlice";
+import { setActiveChatExtendedSection } from "../../features/slices/globalSlice";
 
 const SearchMessage = () => {
   const dispatch = useDispatch();

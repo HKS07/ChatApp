@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addConversation } from "../../features/conversationsSlice";
-import { setReceivedRequest } from "../../features/secondSectionSlice";
+import { addConversation } from "../../features/slices/conversationsSlice";
+import { setReceivedRequest } from "../../features/slices/secondSectionSlice";
 import {
   sendRequestCall,
   updateStatusCall,

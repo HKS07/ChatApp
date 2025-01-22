@@ -4,7 +4,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { AccountContext } from "../../context/AccountProvider";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
-import { setOAuthInfo } from "../../features/accountSlice";
+import { setOAuthInfo } from "../../features/slices/accountSlice";
 // import { CgProfile } from "react-icons/cg";
 // import { MdLockOutline } from "react-icons/md";
 // import { BiMessageDetail } from "react-icons/bi";

@@ -4,7 +4,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext } from "react";
 import { SecondSectionContext } from "../../context/SecondSection";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveChatExtendedSection } from "../../features/globalSlice";
+import { setActiveChatExtendedSection } from "../../features/slices/globalSlice";
 
 const Header = () => {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setCurrentConversationUser } from "../../features/secondSectionSlice";
+import { setCurrentConversationUser } from "../../features/slices/secondSectionSlice";
 
 const getDateTime = (isoDateString) => {
   const messageDateObj = new Date(isoDateString);

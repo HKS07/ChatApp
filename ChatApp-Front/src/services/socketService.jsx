@@ -3,15 +3,16 @@ import {io} from 'socket.io-client';
 const BASE_URL = "http://localhost:8080";
 let socket = null;
 
-export const createSocketConnection = (email, oAuthSub, contacts) => {
+export const initializeSocket  = (email, oAuthSub, contacts,id) => {
     socket = io(BASE_URL, {
         query: {
             email: email,
             oAuthSub: oAuthSub,
             contacts: contacts,
+            dbId: id
         }
     });
-    console.log(socket);
+    // console.log(socket);
     
     socket.on('connect', () => {
         console.log("Connect to socket server");
@@ -20,6 +21,7 @@ export const createSocketConnection = (email, oAuthSub, contacts) => {
     socket.on('disconnect', () => {
         console.log("Disconnected from socket server.");
     });
+
     return socket;
 };
 

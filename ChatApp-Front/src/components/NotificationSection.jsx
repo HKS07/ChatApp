@@ -2,9 +2,9 @@ import { BiMessageDetail } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import Banner from "./Utils/Banner";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setDynamicActiveComponent } from "../features/secondSectionSlice";
+import { setDynamicActiveComponent } from "../features/slices/secondSectionSlice";
 
 const NotificationSection = () => {
   const dispatch = useDispatch();

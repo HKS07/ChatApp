@@ -4,7 +4,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdBlock } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { setActiveChatExtendedSection } from "../../features/globalSlice";
+import { setActiveChatExtendedSection } from "../../features/slices/globalSlice";
 // import { IoHeartDislikeOutline } from "react-icons/io5";
 
 const ContactProfile = () => {

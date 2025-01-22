@@ -4,8 +4,8 @@ import { FaMicrophone } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setConversations } from "../../features/conversationsSlice";
-import { setMessages } from "../../features/messagesSlice";
+import { setConversations } from "../../features/slices/conversationsSlice";
+import { setMessages } from "../../features/slices/messagesSlice";
 
 const Footer = () => {
   const dispatch = useDispatch();

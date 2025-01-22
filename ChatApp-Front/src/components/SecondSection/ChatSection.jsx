@@ -3,7 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
 import { useDispatch, useSelector } from "react-redux";
-import {setDynamicActiveComponent} from '../../features/secondSectionSlice'
+import {setDynamicActiveComponent} from '../../features/slices/secondSectionSlice'
 
 const ChatSection = () => {
   const dispatch = useDispatch();
