@@ -12,10 +12,11 @@ export const initializeSocket  = (email, oAuthSub, contacts,id) => {
             dbId: id
         }
     });
-    // console.log(socket);
+    
     
     socket.on('connect', () => {
         console.log("Connect to socket server");
+        console.log('socket id:', socket.id);
     });
 
     socket.on('disconnect', () => {

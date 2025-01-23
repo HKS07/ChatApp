@@ -23,7 +23,7 @@ function App() {
         accountDBInfo.contacts,
         accountDBInfo.id
       );
-      console.log("my id", socket.id);
+
       
       registerSocketListeners(socket,dispatch);
 

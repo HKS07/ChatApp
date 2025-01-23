@@ -23,7 +23,7 @@ export const setupStatusHandlers = (io, socket) => {
     socket.on("disconnect", () => {
         const currentUser = connectedUsers.get(socket.id);
         if (currentUser) {
-            notifyContactsOnDisconnect(io,currentUser);
+            notifyContactsOnDisconnect(io,socket,currentUser);
             connectedUsers.delete(socket.id);
         }
         console.log(`User disconnected: ${socket.id}`);
@@ -58,7 +58,7 @@ const notifyContactsOnConnect = (io,socket,currentUser) => {
     }
 };
 
-const notifyContactsOnDisconnect = (io,currentUser) => {
+const notifyContactsOnDisconnect = (io,socket,currentUser) => {
     // if (typeof currentUser?.contacts === "string") {
     //     currentUser.contacts = [currentUser.contacts];
     // }
@@ -66,7 +66,7 @@ const notifyContactsOnDisconnect = (io,currentUser) => {
         const contactSocketId = findSocketIdbyUserDbId(dbId);
         if (contactSocketId) {
             io.to(contactSocketId).emit("contactDisconnected", {
-                socketId: contactSocketId,
+                socketId: socket.id,
             });
         }
     }

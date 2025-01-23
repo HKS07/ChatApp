@@ -22,11 +22,14 @@ const contactsSlice = createSlice({
         addOnlineContacts(state,action) {
             state.onlineContacts.push(action.payload);
         },
-        // removeOnlineContacts(state,action) {
-        //     state.onlineContacts = state.onlineContacts.filter((contact) => contact)
-        // }
+        removeOnlineContacts(state,action) {
+           const socketId = action.payload;
+           const idx = state.onlineContacts.findIndex(contact => contact.socketId === socketId);
+           if(idx !== -1) state.onlineContacts.splice(idx,1);
+           
+        }
     }
 });
 
-export const { setContacts, addContact, setOnlineContacts, addOnlineContacts} = contactsSlice.actions;
+export const { setContacts, addContact, setOnlineContacts, addOnlineContacts,removeOnlineContacts} = contactsSlice.actions;
 export default contactsSlice.reducer;
