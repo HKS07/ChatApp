@@ -3,16 +3,14 @@ import { IoIosSearch } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveChatExtendedSection } from "../../features/slices/globalSlice";
-
+import IsOnline from "../Utils/isContactOnline";
 const Header = () => {
   const dispatch = useDispatch();
   const currentConversationUser = useSelector(
     (state) => state.secondSection.currentConversationUser
   );
-  const onlineContacts = useSelector((state) => state.contact.onlineContacts);
-  const isOnline = onlineContacts.some(
-    (contact) => contact.dbId === currentConversationUser.id
-  ) ? 1 : 0;
+
+  const isOnline = IsOnline(currentConversationUser.id, "DB");
   return (
     <div className="relative top-0 flex w-full bg-customGray">
       <div

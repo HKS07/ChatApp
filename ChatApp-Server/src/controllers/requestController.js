@@ -5,38 +5,24 @@ export const sendRequest = async (req, res) => {
   try {
     const { senderEmail, receiverEmail } = req.body;
 
-    const senderRequest = await prisma.request.findFirst({
+    const requestExists = await prisma.request.findFirst({
       where: {
-        senderEmail: senderEmail,
-        receiverEmail: receiverEmail,
+        OR: [
+          { senderEmail, receiverEmail },
+          { senderEmail: receiverEmail, receiverEmail: senderEmail },
+        ],
       },
     });
 
-    const receiverRequest = await prisma.request.findFirst({
-      where: {
-        senderEmail: receiverEmail,
-        receiverEmail: senderEmail,
-      },
-    });
+    if (requestExists) {
+      return res.status(409).json({ message: "Request already exists" });
+    }
 
-    if (senderRequest) {
-      return res
-        .status(409)
-        .json({ message: "Request already sent from current sender" });
-    }
-    if (receiverRequest) {
-      return res
-        .status(409)
-        .json({ message: "Request already sent from current receiver" });
-    }
     const receiverProfile = await prisma.profiles.findUnique({
       where: {
         email: receiverEmail,
       },
     });
-
-    if (!receiverEmail)
-      return res.status(404).json({ message: "No such user exists." });
 
     const senderProfile = await prisma.profiles.findUnique({
       where: {

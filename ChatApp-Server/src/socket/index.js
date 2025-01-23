@@ -1,5 +1,6 @@
 import { setupMessageHandlers } from "./message.js";
 import { setupStatusHandlers } from "./status.js";
+import { setupRequestHandlers } from "./request.js";
 import connectedUsers from "../utils/connectedUsers.js";
 
 export const rootSocketHandlers = (io) => {
@@ -23,5 +24,6 @@ export const rootSocketHandlers = (io) => {
 
     setupMessageHandlers(io, socket);
     setupStatusHandlers(io, socket);
+    setupRequestHandlers(io, socket);
   });
 };
