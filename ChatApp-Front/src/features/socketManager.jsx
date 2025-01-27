@@ -1,4 +1,8 @@
-import { addOnlineContacts, setOnlineContacts, removeOnlineContacts } from "./slices/contactsSlice";
+import {
+  addOnlineContacts,
+  setOnlineContacts,
+  removeOnlineContacts,
+} from "./slices/contactsSlice";
 
 export const registerSocketListeners = (socket, dispatch) => {
   socket.on("disconnect", () => {
@@ -10,13 +14,17 @@ export const registerSocketListeners = (socket, dispatch) => {
     dispatch(setOnlineContacts(contactStatus));
   });
 
-  socket.on("contactDisconnected", (data) =>{
+  socket.on("contactDisconnected", (data) => {
     // console.log("contactDisconnected", data)
-    dispatch(removeOnlineContacts(data.socketId))
- } );
+    dispatch(removeOnlineContacts(data.socketId));
+  });
 
   socket.on("newContactConnected", (data) => {
     // console.log("newContactConnected", data);
     dispatch(addOnlineContacts(data));
+  });
+
+  socket.on("error", (data) => {
+    console.log(data);
   });
 };

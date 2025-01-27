@@ -69,29 +69,34 @@ const AddUserSection = () => {
   );
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
-  
+
   const handleCategory = (type) => {
     setCategory(type);
   };
 
   const handleSendRequest = async () => {
     try {
-      const isReceiverOnline = IsOnline(emailId,"email");
-      if(isReceiverOnline)
-      {
-        const socket = getSocket();
-        socket.emit("sendRequest", {
-          senderEmail: accountDBInfo.email,
-          receiverEmail: emailId,
-        })
-      }
-      else
-      {
-        await sendRequestCall({
-          senderEmail: accountDBInfo.email,
-          receiverEmail: emailId,
-        });
-      }
+      const socket = getSocket();
+      // Remove any existing listener for 'responseIsUserOnline'
+      socket.off("responseIsUserOnline");
+      socket.emit("isUserOnline", { email: emailId });
+      socket.on("responseIsUserOnline", async (isReceiverOnline) => {
+        console.log(isReceiverOnline);
+
+        if (isReceiverOnline) {
+          console.log("inside socket send email");
+
+          socket.emit("sendRequest", {
+            senderEmail: accountDBInfo.email,
+            receiverEmail: emailId,
+          });
+        } else {
+          await sendRequestCall({
+            senderEmail: accountDBInfo.email,
+            receiverEmail: emailId,
+          });
+        }
+      });
     } catch (error) {
       console.log("error while sending request", error.message);
     }

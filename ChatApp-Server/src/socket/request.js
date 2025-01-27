@@ -3,7 +3,7 @@ import connectedUsers from "../utils/connectedUsers.js";
 const prisma = new PrismaClient();
 
 export const setupRequestHandlers = (io, socket) => {
-  socket.on("sendRequest", async (data) => {
+    socket.on("sendRequest", async (data) => {
     const { senderEmail, receiverEmail, receiverSocketId } = data;
 
     const requestExists = await prisma.request.findFirst({

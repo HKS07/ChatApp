@@ -25,14 +25,6 @@ const Header = () => {
           className="w-10 h-10"
         />
       </div>
-      {/* <div
-        className="flex flex-grow items-center text-customLightWhite cursor-pointer"
-        onClick={() => {
-          dispatch(setActiveChatExtendedSection("ContactProfile"));
-        }}
-      >
-        {currentConversationUser?.username} 
-      </div> */}
       <div
         className="flex flex-grow items-center text-customLightWhite cursor-pointer"
         onClick={() => {

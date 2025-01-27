@@ -1,6 +1,19 @@
 import connectedUsers from "../utils/connectedUsers.js";
 
 export const setupStatusHandlers = (io, socket) => {
+    socket.on("isUserOnline", (data) => {
+        const {email} = data;
+        const currentUsers = connectedUsers;
+        var isPresent = false;
+        currentUsers.forEach((user) => {
+            if(user.email === email)
+            {
+                isPresent = true;
+            }
+        })
+        return socket.emit("responseIsUserOnline",isPresent);
+    });
+
     socket.on("getAllContactsStatus", () => {
         const currentUser = connectedUsers.get(socket.id);
         const currentConnectedContacts = [];
