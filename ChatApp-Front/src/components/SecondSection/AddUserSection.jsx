@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPaperPlane, FaCheck, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addConversation } from "../../features/slices/conversationsSlice";
-import { setReceivedRequest } from "../../features/slices/secondSectionSlice";
+import {
+  addSentRequest,
+  setReceivedRequest,
+  updateNotificationFlag,
+} from "../../features/slices/secondSectionSlice";
 import {
   sendRequestCall,
   updateStatusCall,
   addNewContactCall,
   createConversationCall,
 } from "./Service";
-import IsOnline from "../Utils/isContactOnline";
 import { getSocket } from "../../services/socketService";
 
 const handleStatusUI = (status) => {
@@ -67,6 +70,29 @@ const AddUserSection = () => {
   const receivedRequest = useSelector(
     (state) => state.secondSection.receivedRequest
   );
+  const isReceivedRequest = useSelector(
+    (state) => state.secondSection.isReceivedRequest
+  );
+  const isUpdatedStatusOfRequest = useSelector(
+    (state) => state.secondSection.isUpdatedStatusOfRequest
+  );
+
+  useEffect(() => {
+    if (isReceivedRequest) {
+      dispatch(
+        updateNotificationFlag({ type: "receivedRequest", flag: false })
+      );
+    }
+    if (isUpdatedStatusOfRequest) {
+      dispatch(updateNotificationFlag({ type: "statusUpdate", flag: false }));
+    }
+  }, [isReceivedRequest, isUpdatedStatusOfRequest]);
+
+  // useEffect(() => {
+  //   console.log("Sent request", sentRequest);
+  //   console.log("Received request", receivedRequest);
+  // }, [sentRequest, receivedRequest]);
+
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
 
@@ -80,22 +106,25 @@ const AddUserSection = () => {
       // Remove any existing listener for 'responseIsUserOnline'
       socket.off("responseIsUserOnline");
       socket.emit("isUserOnline", { email: emailId });
-      socket.on("responseIsUserOnline", async (isReceiverOnline) => {
-        console.log(isReceiverOnline);
-
-        if (isReceiverOnline) {
+      socket.on("responseIsUserOnline", async (response) => {
+        const isPresent = response.isPresent;
+        const socketId = response?.socketId;
+        if (isPresent) {
           console.log("inside socket send email");
 
           socket.emit("sendRequest", {
             senderEmail: accountDBInfo.email,
             receiverEmail: emailId,
+            receiverSocketId: socketId,
           });
         } else {
-          await sendRequestCall({
+          const response = await sendRequestCall({
             senderEmail: accountDBInfo.email,
             receiverEmail: emailId,
           });
+          if (response?.success) dispatch(addSentRequest(response.newRequest));
         }
+        setEmailId("");
       });
     } catch (error) {
       console.log("error while sending request", error.message);
@@ -103,6 +132,18 @@ const AddUserSection = () => {
   };
 
   const updateReceivedRequestStatus = async (status, req) => {
+    // console.log(req);
+    
+    // const socket = getSocket();
+
+    // socket.off("responseIsUserOnline");
+    // socket.emit("isUserOnline", {email: emailId})
+    // socket.on("responseIsUserOnline", async (response) => {
+    //   const isPresent = response.isPresent;
+    //   const socketId = response?.socketId;
+
+    // })
+
     const updatedStatus = await updateStatusCall({
       status: status,
       reqId: req.id,
@@ -221,7 +262,6 @@ const AddUserSection = () => {
             ) : (
               <></>
             )}
-            {/* Add more requests as needed */}
           </div>
         ) : (
           <div>

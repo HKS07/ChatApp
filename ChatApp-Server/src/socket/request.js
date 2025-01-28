@@ -69,8 +69,16 @@ export const setupRequestHandlers = (io, socket) => {
       },
     });
 
+    // console.log("connectedUsers ",connectedUsers);
+    // console.log("from ", socket.id, "to ", receiverSocketId);
+    
+    socket.emit("sendRequestSuccess", newRequest);
     if (connectedUsers.has(receiverSocketId)) {
+
+      console.log("sending request");
+      
       socket.to(receiverSocketId).emit("receivedRequest", newRequest);
     }
   });
+
 };

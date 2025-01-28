@@ -61,7 +61,7 @@ export const sendRequest = async (req, res) => {
       },
     });
 
-    return res.status(201);
+    return res.status(201).json({success: true, newRequest: newRequest});
   } catch (error) {
     console.log("Error while sending request: ", error);
     return res

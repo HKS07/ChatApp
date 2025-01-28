@@ -1,20 +1,23 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import UserLable from "./UsersLabel";
 import { useDispatch, useSelector } from "react-redux";
-import {setDynamicActiveComponent} from '../../features/slices/secondSectionSlice'
+import { setDynamicActiveComponent } from "../../features/slices/secondSectionSlice";
 
 const ChatSection = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contact.contacts);
-  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
+  const contacts = useSelector((state) => state.contact.contacts);
+  const accountDBInfo = useSelector((state) => state.account.accountDBInfo);
   const [category, setCategory] = useState("All");
   const [isHovered, setIsHovered] = useState(false);
   const [transformedContacts, setTransformedContacts] = useState();
+  const isReceivedRequest = useSelector(state => state.secondSection.isReceivedRequest) ;
+  const isUpdatedStatusOfRequest = useSelector(state => state.secondSection.isUpdatedStatusOfRequest);
   // const { conversations } = useContext(ConversationContext);
-  const conversations = useSelector(state => state.conversation.conversations);
-  
+  const conversations = useSelector(
+    (state) => state.conversation.conversations
+  );
 
   useEffect(() => {
     if (!contacts || contacts.length == 0) return;
@@ -29,13 +32,23 @@ const ChatSection = () => {
     <div className="w-[446px] bg-customBlack text-white">
       <div className="flex justify-between items-center">
         <div className="text-2xl font-bold mx-5 my-2 py-2">Chats</div>
-        <div className="relative flex items-center">
+        <div className="relative flex items-center p-1">
+          {/* Icon with hover events */}
           <LuMessageSquarePlus
             className="mx-5 text-2xl cursor-pointer"
-            onClick={() => dispatch(setDynamicActiveComponent("AddUserSection"))}
+            onClick={() =>
+              dispatch(setDynamicActiveComponent("AddUserSection"))
+            }
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           />
+
+          {/* Green dot */}
+          {(isReceivedRequest || isUpdatedStatusOfRequest) && (
+            <div className="absolute top-0 right-4 w-2 h-2 bg-green-500 rounded-full"></div>
+          )}
+
+          {/* Tooltip */}
           {isHovered && (
             <div className="absolute z-10 left-14 text-sm p-0 m-0">
               <div className="bg-white text-black rounded-2xl p-2 shadow-lg inline-block whitespace-nowrap">
@@ -95,7 +108,7 @@ const ChatSection = () => {
                 convo?.participants?.includes(contact.id)
               );
             });
-            
+
             return (
               <UserLable
                 key={contact.id}

@@ -4,14 +4,14 @@ export const setupStatusHandlers = (io, socket) => {
     socket.on("isUserOnline", (data) => {
         const {email} = data;
         const currentUsers = connectedUsers;
-        var isPresent = false;
-        currentUsers.forEach((user) => {
-            if(user.email === email)
+        var response = {isPresent: false, socketId: null};
+        currentUsers.forEach((value,key) => {
+            if(value.email === email)
             {
-                isPresent = true;
+                response = {isPresent: true, socketId: key}
             }
         })
-        return socket.emit("responseIsUserOnline",isPresent);
+        return socket.emit("responseIsUserOnline", response );
     });
 
     socket.on("getAllContactsStatus", () => {

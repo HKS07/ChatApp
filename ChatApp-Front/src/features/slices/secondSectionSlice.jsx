@@ -1,10 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isRejected } from "@reduxjs/toolkit";
 
 const initialState = {
   currentConversationUser: undefined,
   dynamicActiveComponent: "ChatSection",
-  sentRequest: null,
-  receivedRequest: null,
+  sentRequest: [],
+  receivedRequest: [],
+  isReceivedRequest: false,
+  isUpdatedStatusOfRequest: false
 };
 
 const secondSectionSlice = createSlice({
@@ -20,9 +22,19 @@ const secondSectionSlice = createSlice({
     setSentRequest(state, action) {
       state.sentRequest = action.payload;
     },
+    addSentRequest(state,action) {
+      state.sentRequest.push(action.payload)
+    },
     setReceivedRequest(state, action) {
       state.receivedRequest = action.payload;
     },
+    addReceivedRequest(state, action) {
+      state.receivedRequest.push(action.payload);
+    },
+    updateNotificationFlag(state, action) {
+      if(action.payload.type === "receivedRequest") state.isReceivedRequest = action.payload.flag;
+      else state.isUpdatedStatusOfRequest = action.payload.flag;
+    }
   },
 });
 
@@ -31,5 +43,8 @@ export const {
   setDynamicActiveComponent,
   setReceivedRequest,
   setSentRequest,
+  addSentRequest,
+  addReceivedRequest,
+  updateNotificationFlag
 } = secondSectionSlice.actions;
 export default secondSectionSlice.reducer;

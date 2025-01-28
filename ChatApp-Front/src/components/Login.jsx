@@ -44,6 +44,7 @@ const ChatAppWebLogin = () => {
       const receivedRequest = requests?.request?.filter(
         (req) => req.receiverEmail === decoded.email
       );
+      
       dispatch(setSentRequest(sentRequest));
       dispatch(setReceivedRequest(receivedRequest));
 
