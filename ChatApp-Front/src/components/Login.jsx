@@ -32,6 +32,7 @@ const ChatAppWebLogin = () => {
         profileUrl: decoded.picture,
         email: decoded.email,
       });
+      console.log("inside login ", userData);
       
       // setAccountDBInfo(userData.user);
       dispatch(setAccountDBInfo(userData.user));
