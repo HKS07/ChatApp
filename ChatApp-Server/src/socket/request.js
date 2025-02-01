@@ -103,7 +103,7 @@ export const setupRequestHandlers = (io, socket) => {
       socket.emit("updateStatusAck", { success: true });
       socket
         .to(requestSenderSocketId)
-        .emit("updatedStatusOfSentRequest", { status: status });
+        .emit("updatedStatusOfSentRequest", { status: status, reqId: reqId });
     } catch (error) {
       socket.emit("error", {
         message: `error while updating status: ${error}`,
@@ -113,7 +113,8 @@ export const setupRequestHandlers = (io, socket) => {
   });
 
   socket.on("addContact", async (data) => {
-    const { userAEmailId, userBEmailId } = data;
+    // userAEmailId = receiver of friend request, userBEmailId = sender of firent request
+    const { userAEmailId, userBEmailId } = data; 
     try {
       const userA = await prisma.profiles.findUnique({
         where: { email: userAEmailId },
@@ -130,7 +131,7 @@ export const setupRequestHandlers = (io, socket) => {
         socket.emit("addContactAck", {success: false});
         return;
       }
-      
+
       await prisma.profiles.update({
         where: {
           email: userA.email,
@@ -151,6 +152,29 @@ export const setupRequestHandlers = (io, socket) => {
           },
         },
       });
+
+      
+      const senderContactInfo = {
+        id: userB.id,
+        username: userB.username,
+        status: userB.status,
+        email: userB.email,
+        profileUrl: userB.profileUrl
+      }
+      var socketIdOfContactRequestSender ;
+      connectedUsers.forEach((value,key) => {if(value.email === userBEmailId) {socketIdOfContactRequestSender = key;}} );
+      
+      const receiverContactInfo = {
+        id: userA.id,
+        username: userA.username,
+        status: userA.status,
+        email: userA.email,
+        profileUrl: userA.profileUrl
+      }
+
+      socket.emit("getContactInfo", {contact: senderContactInfo});
+      socket.to(socketIdOfContactRequestSender).emit("getContactInfo", {contact: receiverContactInfo});
+
       socket.emit("addContactAck", {
         success: true,
         message: "new contact added successfully",
@@ -215,6 +239,7 @@ export const setupRequestHandlers = (io, socket) => {
       // tell both event emitter and friend request sender = senderSocketId
       socket.emit("createConversationAck", {success: true, message: "new conversation created successfully",
         conversation: newConversation});
+      console.log("requestSenderSocketId",requestSenderSocketId); 
       socket.to(requestSenderSocketId).emit("createConversationOfRequestSenderAck", {success: true, message: "new conversation created successfully",
         conversation: newConversation});
     } catch (error) {

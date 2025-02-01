@@ -32,6 +32,8 @@ export const updateStatusCall = async (data) => {
 
 export const addNewContactCall = async (data) => {
   try {
+    console.log("addNewContactCall", data);
+    
     const response = await fetch(`${BASE_URL}/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,7 +49,7 @@ export const addNewContactCall = async (data) => {
 
 export const createConversationCall = async (data) => {
   try {
-    const response = await fetch(`${BASE_URL}/contact`, {
+    const response = await fetch(`${BASE_URL}/conversation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

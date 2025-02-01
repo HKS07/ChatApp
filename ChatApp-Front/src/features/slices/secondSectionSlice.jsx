@@ -34,6 +34,14 @@ const secondSectionSlice = createSlice({
     updateNotificationFlag(state, action) {
       if(action.payload.type === "receivedRequest") state.isReceivedRequest = action.payload.flag;
       else state.isUpdatedStatusOfRequest = action.payload.flag;
+    },
+    updateSentRequestStatus(state,action) {
+      const idx = state.sentRequest.findIndex(req => req.id === action.payload.reqId);
+      state.sentRequest[idx].status = action.payload.status;
+    },
+    updateReceivedRequestStatusInSlice(state,action) {
+      const idx = state.receivedRequest.findIndex(req => req.id === action.payload.reqId);
+      state.receivedRequest[idx].status = action.payload.status;
     }
   },
 });
@@ -45,6 +53,8 @@ export const {
   setSentRequest,
   addSentRequest,
   addReceivedRequest,
-  updateNotificationFlag
+  updateNotificationFlag,
+  updateSentRequestStatus,
+  updateReceivedRequestStatusInSlice
 } = secondSectionSlice.actions;
 export default secondSectionSlice.reducer;

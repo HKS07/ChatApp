@@ -6,6 +6,7 @@ import {
   addSentRequest,
   setReceivedRequest,
   updateNotificationFlag,
+  updateReceivedRequestStatusInSlice,
 } from "../../features/slices/secondSectionSlice";
 import {
   sendRequestCall,
@@ -14,6 +15,7 @@ import {
   createConversationCall,
 } from "./Service";
 import { getSocket } from "../../services/socketService";
+import { addContact } from "../../features/slices/contactsSlice";
 
 const handleStatusUI = (status) => {
   const pending = "text-yellow-500 border border-yellow-500";
@@ -95,6 +97,9 @@ const AddUserSection = () => {
 
   const [category, setCategory] = useState("Received"); // Tracks active section
   const [emailId, setEmailId] = useState("");
+  const conversat = useSelector(state => state.conversation.conversations);
+  console.log("conversat", conversat);
+  
 
   const handleCategory = (type) => {
     setCategory(type);
@@ -139,9 +144,9 @@ const AddUserSection = () => {
   };
   const updateReceivedRequestStatus = async (status, req) => {
     try {
-      console.log("hi");
-
       const socket = getSocket();
+      console.log(req);
+
       const responseFromSocket = await checkIsUserOnline(
         socket,
         req.senderEmail
@@ -151,7 +156,6 @@ const AddUserSection = () => {
         updatedThroughREST = false;
       if (isPresent) {
         console.log("inside Is present");
-        
 
         socket.emit("updateStatusSender", {
           status: status,
@@ -171,16 +175,17 @@ const AddUserSection = () => {
           status: status,
           reqId: req.id,
         });
-        if (updatedStatus.ok) updatedThroughREST = true;
+
+        if (updatedStatus.message === "request status updated successfully")
+          updatedThroughREST = true;
       }
 
       //handeling creating conversations both through socket and rest api
 
       if (updatedThroughREST || updatedThroughSocket) {
-        const newReceivedRequest = receivedRequest.filter(
-          (recReq) => recReq.id !== req.id
+        dispatch(
+          updateReceivedRequestStatusInSlice({ reqId: req.id, status: status })
         );
-        dispatch(setReceivedRequest(newReceivedRequest));
 
         if (status === "Accepted" && updatedThroughSocket) {
           const addNewContactResponse = await new Promise((resolve) => {
@@ -190,7 +195,7 @@ const AddUserSection = () => {
               userBEmailId: req.senderEmail,
             });
           });
-
+          
           if (addNewContactResponse?.success) {
             const createConversationResponse = await new Promise((resolve) => {
               socket.once("createConversationAck", (response) =>
@@ -202,10 +207,9 @@ const AddUserSection = () => {
                 requestSenderSocketId: socketId,
               });
             });
-
+            
             if (createConversationResponse?.success) {
-              console.log(createConversationResponse?.conversation);
-              dispatch(addConversation(createConversationCall.conversation));
+              dispatch(addConversation(createConversationResponse));
             }
           }
 
@@ -213,19 +217,19 @@ const AddUserSection = () => {
 
           // dispatch(addConversation(convo));
         } else if (status === "Accepted" && updatedThroughREST) {
-          await addNewContactCall({
+          const addNewContactResponse = await addNewContactCall({
             userAEmailId: accountDBInfo.email,
             userBEmailId: req.senderEmail,
           });
+
+          dispatch(addContact(addNewContactResponse?.contact));
 
           const conversationResponse = await createConversationCall({
             primaryUserEmail: accountDBInfo.email,
             secondryUserEmail: req.senderEmail,
           });
 
-          const convo = await conversationResponse.json();
-
-          dispatch(addConversation(convo));
+          dispatch(addConversation(conversationResponse));
         }
       }
     } catch (error) {

@@ -2,12 +2,14 @@ import {
   addOnlineContacts,
   setOnlineContacts,
   removeOnlineContacts,
+  addContact,
 } from "./slices/contactsSlice";
 import { addConversation } from "./slices/conversationsSlice";
 import {
   addSentRequest,
   addReceivedRequest,
   updateNotificationFlag,
+  updateSentRequestStatus,
 } from "./slices/secondSectionSlice";
 
 export const registerSocketListeners = (socket, dispatch) => {
@@ -41,12 +43,19 @@ export const registerSocketListeners = (socket, dispatch) => {
 
   socket.on("updatedStatusOfSentRequest", (data) => {
     console.log("inside updatedStatusOfSentRequest", data);
+    dispatch(updateSentRequestStatus(data));
   });
 
-  socket.on("createConversationOfRequestSenderAck", (data) => {
+  socket.on("createConversationOfRequestSender", (data) => {
     console.log("inside createConversationOfRequestSenderAck", data);
     dispatch(addConversation(data?.conversation));
   });
+
+  socket.on("getContactInfo", (data) => {
+    console.log("getContactInfo", data.contact, data.contact.contact); 
+    dispatch(addContact(data?.contact));
+  });
+
   socket.on("error", (data) => {
     console.log(data);
   });

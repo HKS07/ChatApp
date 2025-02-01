@@ -42,13 +42,16 @@ export const addContact = async (req, res) => {
   const { userAEmailId, userBEmailId } = req.body;
   
   try {
+    // userAEmailId = receiver of friend request, userBEmailId = sender of firent request
     const userA = await prisma.profiles.findUnique({where: {email: userAEmailId}});
     const userB = await prisma.profiles.findUnique({where: {email: userBEmailId}});
+
 
     if(!userA || !userB)
     {
       return res.status(404).json({message:"user doesn't exists"});
     }
+
     await prisma.profiles.update({
       where: {
         email: userA.email,
@@ -69,13 +72,22 @@ export const addContact = async (req, res) => {
         },
       },
     });
-    return res.status(200).send("contact added successfully.");
+
+    const senderContactInfo = {
+      id: userB.id,
+      username: userB.username,
+      status: userB.status,
+      email: userB.email,
+      profileUrl: userB.profileUrl
+    }
+
+    return res.status(200).json({message: "contact added successfully.", contact: senderContactInfo});
   } catch (error) {
     console.log("error occured during adding contact to usser: ", error);
 
     return res
       .status(500)
-      .send("An error occured during adding new contact to user");
+      .json({message: "An error occured during adding new contact to user"});
   }
 };
 

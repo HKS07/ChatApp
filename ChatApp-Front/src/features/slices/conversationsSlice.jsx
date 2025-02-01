@@ -13,7 +13,9 @@ const conversationSlice = createSlice({
             state.conversations = action.payload;
         },
         addConversation(state,action){
-            state.conversations.push(action.payload);
+            console.log("inside add covnersation", action.payload.conversation);
+            
+            state.conversations.push(action.payload.conversation);
         }
     }
 })
