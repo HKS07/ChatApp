@@ -79,6 +79,7 @@ export const setupRequestHandlers = (io, socket) => {
 
   socket.on("updateStatusSender", async (data) => {
     const { status, reqId, requestSenderSocketId } = data;
+    console.log(status, reqId, requestSenderSocketId);
 
     try {
       const request = await prisma.request.findUnique({
@@ -114,7 +115,7 @@ export const setupRequestHandlers = (io, socket) => {
 
   socket.on("addContact", async (data) => {
     // userAEmailId = receiver of friend request, userBEmailId = sender of firent request
-    const { userAEmailId, userBEmailId } = data; 
+    const { userAEmailId, userBEmailId } = data;
     try {
       const userA = await prisma.profiles.findUnique({
         where: { email: userAEmailId },
@@ -128,7 +129,7 @@ export const setupRequestHandlers = (io, socket) => {
           message:
             "Error during adding new contact upon accepting the friend request. user doesn't exists",
         });
-        socket.emit("addContactAck", {success: false});
+        socket.emit("addContactAck", { success: false });
         return;
       }
 
@@ -153,27 +154,32 @@ export const setupRequestHandlers = (io, socket) => {
         },
       });
 
-      
       const senderContactInfo = {
         id: userB.id,
         username: userB.username,
         status: userB.status,
         email: userB.email,
-        profileUrl: userB.profileUrl
-      }
-      var socketIdOfContactRequestSender ;
-      connectedUsers.forEach((value,key) => {if(value.email === userBEmailId) {socketIdOfContactRequestSender = key;}} );
-      
+        profileUrl: userB.profileUrl,
+      };
+      var socketIdOfContactRequestSender;
+      connectedUsers.forEach((value, key) => {
+        if (value.email === userBEmailId) {
+          socketIdOfContactRequestSender = key;
+        }
+      });
+
       const receiverContactInfo = {
         id: userA.id,
         username: userA.username,
         status: userA.status,
         email: userA.email,
-        profileUrl: userA.profileUrl
-      }
+        profileUrl: userA.profileUrl,
+      };
 
-      socket.emit("getContactInfo", {contact: senderContactInfo});
-      socket.to(socketIdOfContactRequestSender).emit("getContactInfo", {contact: receiverContactInfo});
+      socket.emit("getContactInfo", { contact: senderContactInfo });
+      socket
+        .to(socketIdOfContactRequestSender)
+        .emit("getContactInfo", { contact: receiverContactInfo });
 
       socket.emit("addContactAck", {
         success: true,
@@ -202,10 +208,11 @@ export const setupRequestHandlers = (io, socket) => {
         },
       });
 
-      if (!primaryUser || !secondaryUser)
-      {
-        socket.emit("createConversationAck", {success: false});
-        socket.emit("error", {message: "user doens't exists while creating new conversation"})
+      if (!primaryUser || !secondaryUser) {
+        socket.emit("createConversationAck", { success: false });
+        socket.emit("error", {
+          message: "user doens't exists while creating new conversation",
+        });
         return;
       }
 
@@ -231,21 +238,37 @@ export const setupRequestHandlers = (io, socket) => {
         },
       });
 
-      // return res.status(200).json({
-      //   message: "new conversation created successfully",
-      //   conversation: newConversation,
-      // });
-
-      // tell both event emitter and friend request sender = senderSocketId
-      socket.emit("createConversationAck", {success: true, message: "new conversation created successfully",
-        conversation: newConversation});
-      console.log("requestSenderSocketId",requestSenderSocketId); 
-      socket.to(requestSenderSocketId).emit("createConversationOfRequestSenderAck", {success: true, message: "new conversation created successfully",
-        conversation: newConversation});
+      // socket.emit("newContactConnected", {socketId: requestSenderSocketId, restSender});
+      {
+        const { contacts,oAuthSub, ...rest } = connectedUsers.get(requestSenderSocketId);
+        socket.emit("newContactConnected", {socketId: requestSenderSocketId, ...rest});
+      }
+      {
+        const { contacts,oAuthSub, ...rest } = connectedUsers.get(socket.id);
+        socket.to(requestSenderSocketId).emit("newContactConnected", {socketId: socket.id, ...rest});
+      }
+      socket.emit("createConversationAck", {
+        success: true,
+        message: "new conversation created successfully",
+        conversation: newConversation,
+      });
+      // console.log("requestSenderSocketId",requestSenderSocketId);
+      socket
+        .to(requestSenderSocketId)
+        .emit("createConversationOfRequestSenderAck", {
+          success: true,
+          message: "new conversation created successfully",
+          conversation: newConversation,
+        });
     } catch (error) {
       console.log("Error while createConversation", error);
-      socket.emit("error", {message: `Error while createConversation: ${error}`});
-      socket.emit("createConversationAck", {success: false, message: "new conversation creation failed."});
+      socket.emit("error", {
+        message: `Error while createConversation: ${error}`,
+      });
+      socket.emit("createConversationAck", {
+        success: false,
+        message: "new conversation creation failed.",
+      });
     }
   });
 };

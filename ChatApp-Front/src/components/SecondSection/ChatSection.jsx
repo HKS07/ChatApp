@@ -18,7 +18,7 @@ const ChatSection = () => {
   const conversations = useSelector(
     (state) => state.conversation.conversations
   );
-
+  
   useEffect(() => {
     if (!contacts || contacts.length == 0) return;
     const tempContacts = Object.values(contacts);

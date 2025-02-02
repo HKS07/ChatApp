@@ -13,8 +13,6 @@ const conversationSlice = createSlice({
             state.conversations = action.payload;
         },
         addConversation(state,action){
-            console.log("inside add covnersation", action.payload.conversation);
-            
             state.conversations.push(action.payload.conversation);
         }
     }

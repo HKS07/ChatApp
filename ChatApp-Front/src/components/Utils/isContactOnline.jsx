@@ -1,20 +1,33 @@
 import { useSelector } from "react-redux";
 
-
 const IsOnline = (id, idType) => {
-    const allContacts = useSelector(state => state.contact.onlineContacts);
-    if(idType === "DB")
-    {
-        return allContacts?.some(contact => contact.dbId === id) ? 1: 0;
-    }
-    else if( idType === "oAuthSub")
-    {
-        return allContacts?.some(contact => contact.oAuthSub === id) ? 1: 0;
-    }
-    else if( idType === "email")
-    {
-        return allContacts?.some(contact => contact.email === id); 
-    }
-}
+  const allOnlineContacts = useSelector(
+    (state) => state.contact.onlineContacts
+  );
+  const res = { success: false, socketId: null };
+  if (idType === "DB") {
+    allOnlineContacts?.map((contact) => {
+      if (contact.dbId === id) {
+        res.success = true;
+        res.socketId = contact.socketId;
+      }
+    });
+  } else if (idType === "oAuthSub") {
+    allOnlineContacts?.map((contact) => {
+      if (contact.oAuthSub === id) {
+        res.success = true;
+        res.socketId = contact.socketId;
+      }
+    });
+  } else if (idType === "email") {
+    allOnlineContacts?.map((contact) => {
+      if (contact.email === id) {
+        res.success = true;
+        res.socketId = contact.socketId;
+      }
+    });
+  }
+  return res;
+};
 
 export default IsOnline;

@@ -42,17 +42,17 @@ export const registerSocketListeners = (socket, dispatch) => {
   });
 
   socket.on("updatedStatusOfSentRequest", (data) => {
-    console.log("inside updatedStatusOfSentRequest", data);
+    // console.log("inside updatedStatusOfSentRequest", data);
     dispatch(updateSentRequestStatus(data));
   });
 
-  socket.on("createConversationOfRequestSender", (data) => {
-    console.log("inside createConversationOfRequestSenderAck", data);
-    dispatch(addConversation(data?.conversation));
+  socket.on("createConversationOfRequestSenderAck", (data) => {
+    // console.log("inside createConversationOfRequestSenderAck", data?.conversation);
+    dispatch(addConversation(data));
   });
 
   socket.on("getContactInfo", (data) => {
-    console.log("getContactInfo", data.contact, data.contact.contact); 
+    // console.log("getContactInfo", data.contact, data.contact.contact); 
     dispatch(addContact(data?.contact));
   });
 

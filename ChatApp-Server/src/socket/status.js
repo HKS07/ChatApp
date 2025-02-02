@@ -54,15 +54,10 @@ const findSocketIdbyUserDbId = (dbId) => {
 };
 
 const notifyContactsOnConnect = (io,socket,currentUser) => {
-    // if (typeof currentUser?.contacts === "string") {
-    //     currentUser.contacts = [currentUser.contacts];
-    // }
     for (const contactsDBId of currentUser?.contacts) {
         const contactSocketId = findSocketIdbyUserDbId(contactsDBId);
-        // console.log("notifyContactsOnConnect",contactSocketId);
-        
         if (contactSocketId) {
-            const { contacts, ...rest } = currentUser;
+            const { contacts,oAuthSub, ...rest } = currentUser;
             io.to(contactSocketId).emit("newContactConnected", {
                 socketId: socket.id,
                 ...rest,
@@ -72,9 +67,6 @@ const notifyContactsOnConnect = (io,socket,currentUser) => {
 };
 
 const notifyContactsOnDisconnect = (io,socket,currentUser) => {
-    // if (typeof currentUser?.contacts === "string") {
-    //     currentUser.contacts = [currentUser.contacts];
-    // }
     for (const dbId of currentUser?.contacts) {
         const contactSocketId = findSocketIdbyUserDbId(dbId);
         if (contactSocketId) {

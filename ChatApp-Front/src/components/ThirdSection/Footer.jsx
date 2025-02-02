@@ -6,44 +6,70 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setConversations } from "../../features/slices/conversationsSlice";
 import { setMessages } from "../../features/slices/messagesSlice";
+import { messageSentCall } from "./Service";
+import IsOnline from "../Utils/isContactOnline";
+import {sendMessageSocket} from "../../services/socketService";
 
 const Footer = () => {
   const dispatch = useDispatch();
   const [typedMessage, setTypedMessage] = useState("");
-  const currentConversationUser = useSelector(state => state.secondSection.currentConversationUser);
+  const currentConversationUser = useSelector(
+    (state) => state.secondSection.currentConversationUser
+  );
 
-  const accountDBInfo = useSelector(state => state.account.accountDBInfo);
-  const messages = useSelector(state => state.message.messages);
-  const conversations = useSelector(state => state.conversation.conversations);
-
+  const accountDBInfo = useSelector((state) => state.account.accountDBInfo);
+  const messages = useSelector((state) => state.message.messages);
+  const conversations = useSelector(
+    (state) => state.conversation.conversations
+  );
+  const { isOnline, socketId } = IsOnline(currentConversationUser.id, "DB");
 
   const sendMessage = async () => {
     try {
-      const messageSent = await fetch("http://localhost:8080/message/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      var sentBySocket = false,
+        sentByRest = false,
+        msg;
+
+      if (isOnline) {
+        const sendMessageResponse = await sendMessageSocket({
           conversationId: currentConversationUser.convoId,
           senderId: accountDBInfo.id,
           content: typedMessage,
-        }),
-      });
-      const jsonMessaggeSent = await messageSent.json();
+          recSocketId: socketId,
+        });
 
-      if (messageSent.ok) {
-        dispatch(setMessages([...(messages || []), jsonMessaggeSent?.newMessage]));
+        if (sendMessageResponse?.success) {
+          sentBySocket = true;
+          msg = sendMessageResponse;
+        }
+      } else {
+        const messageSentResponse = await messageSentCall(
+          currentConversationUser.convoId,
+          accountDBInfo.id,
+          typedMessage
+        );
+        if (messageSentResponse) {
+          sentByRest = true;
+          msg = messageSentResponse;
+        }
+        // console.log(accountDBInfo.id);
+      }
+      
+      if (sentByRest || sentBySocket) {
+        dispatch(
+          setMessages([...(messages || []), msg?.newMessage])
+        );
 
         const updatedConvo = conversations.map((convo) => {
           if (convo.id === currentConversationUser.convoId) {
             return {
               ...convo,
               lastMessage: typedMessage,
-              updatedAt: (new Date()).toString(), // Convert Date to ISO string
+              updatedAt: new Date().toString(), // Convert Date to ISO string
             };
           }
           return convo;
         });
-        // setConversations(updatedConvo);
         dispatch(setConversations(updatedConvo));
         setTypedMessage("");
       }

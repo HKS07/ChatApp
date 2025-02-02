@@ -10,7 +10,7 @@ const Header = () => {
     (state) => state.secondSection.currentConversationUser
   );
 
-  const isOnline = IsOnline(currentConversationUser.id, "DB");
+  const isOnline = IsOnline(currentConversationUser.id, "DB")?.success;
   return (
     <div className="relative top-0 flex w-full bg-customGray">
       <div
@@ -33,7 +33,7 @@ const Header = () => {
       >
         <span className="flex items-center space-x-2">
           <span>{currentConversationUser?.username}</span>
-          {isOnline === 1 && (
+          {isOnline === true && (
             <span
               className="w-2.5 h-2.5 bg-customGreen3 rounded-full"
               title="Online"
