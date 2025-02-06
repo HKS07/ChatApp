@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentConversationUser } from "../../features/slices/secondSectionSlice";
 
 const getDateTime = (isoDateString) => {
@@ -22,8 +22,9 @@ const getDateTime = (isoDateString) => {
 const UserLable = ({ id, username, profileUrl, msg, convoId, updatedAt }) => {
   const dispatch = useDispatch();
   const dateTime = getDateTime(updatedAt);
+  const curUserMIdx = useSelector(state => state.message.currentUserMessageIdx)
 
-  const onClickSetLabel = (id, username, profileUrl, convoId) => {
+  const onClickSetLabel = async (id, username, profileUrl, convoId) => {
     dispatch(
       setCurrentConversationUser({
         id: id,

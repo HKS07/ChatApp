@@ -9,7 +9,7 @@ const Header = () => {
   const currentConversationUser = useSelector(
     (state) => state.secondSection.currentConversationUser
   );
-
+  
   const isOnline = IsOnline(currentConversationUser.id, "DB")?.success;
   return (
     <div className="relative top-0 flex w-full bg-customGray">

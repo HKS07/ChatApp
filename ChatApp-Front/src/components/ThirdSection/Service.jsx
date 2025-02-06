@@ -18,3 +18,23 @@ export const messageSentCall = async (conversationId, senderId, content) => {
     throw error;
   }
 };
+
+export const fetchMessageCall = async (conversationId) => {
+  try {
+    const response = await fetch("http://localhost:8080/message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        conversationId: conversationId,
+      }),
+    });
+
+    if(!response.ok) {
+      throw new Error("Failed to fetch messages");
+    }
+    return await response.json();
+  } catch (error) {
+    console.log("Error in fetchMessageCall", error);
+    throw error;
+  }
+}

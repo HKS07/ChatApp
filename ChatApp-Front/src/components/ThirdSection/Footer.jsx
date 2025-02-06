@@ -4,8 +4,8 @@ import { FaMicrophone } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setConversations } from "../../features/slices/conversationsSlice";
-import { setMessages } from "../../features/slices/messagesSlice";
+import { updateConversation } from "../../features/slices/conversationsSlice";
+import { addMessageToUser } from "../../features/slices/messagesSlice";
 import { messageSentCall } from "./Service";
 import IsOnline from "../Utils/isContactOnline";
 import {sendMessageSocket} from "../../services/socketService";
@@ -18,24 +18,21 @@ const Footer = () => {
   );
 
   const accountDBInfo = useSelector((state) => state.account.accountDBInfo);
-  const messages = useSelector((state) => state.message.messages);
-  const conversations = useSelector(
-    (state) => state.conversation.conversations
-  );
-  const { isOnline, socketId } = IsOnline(currentConversationUser.id, "DB");
+  const isOnline = IsOnline(currentConversationUser.id, "DB").success;
+  const socketId = IsOnline(currentConversationUser.id, "DB").socketId;
 
   const sendMessage = async () => {
     try {
       var sentBySocket = false,
         sentByRest = false,
         msg;
-
+      
       if (isOnline) {
         const sendMessageResponse = await sendMessageSocket({
           conversationId: currentConversationUser.convoId,
           senderId: accountDBInfo.id,
           content: typedMessage,
-          recSocketId: socketId,
+          receiverSocketId: socketId,
         });
 
         if (sendMessageResponse?.success) {
@@ -52,25 +49,12 @@ const Footer = () => {
           sentByRest = true;
           msg = messageSentResponse;
         }
-        // console.log(accountDBInfo.id);
       }
-      
       if (sentByRest || sentBySocket) {
         dispatch(
-          setMessages([...(messages || []), msg?.newMessage])
+          addMessageToUser({id: currentConversationUser.id, message: msg?.newMessage})
         );
-
-        const updatedConvo = conversations.map((convo) => {
-          if (convo.id === currentConversationUser.convoId) {
-            return {
-              ...convo,
-              lastMessage: typedMessage,
-              updatedAt: new Date().toString(), // Convert Date to ISO string
-            };
-          }
-          return convo;
-        });
-        dispatch(setConversations(updatedConvo));
+        dispatch(updateConversation({convoId: currentConversationUser.convoId, content: typedMessage}))
         setTypedMessage("");
       }
     } catch (error) {

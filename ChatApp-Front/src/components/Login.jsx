@@ -1,6 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setConversations } from "../features/slices/conversationsSlice";
 import { setSentRequest } from "../features/slices/secondSectionSlice";
 import { setReceivedRequest } from "../features/slices/secondSectionSlice";

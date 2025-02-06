@@ -23,8 +23,8 @@ const ChatSection = () => {
     if (!contacts || contacts.length == 0) return;
     const tempContacts = Object.values(contacts);
     setTransformedContacts(tempContacts);
-  }, [contacts]);
-
+  }, [contacts]);  
+  
   const handleCategory = (cat) => {
     setCategory(cat);
   };

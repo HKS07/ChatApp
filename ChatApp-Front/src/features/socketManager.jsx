@@ -4,7 +4,12 @@ import {
   removeOnlineContacts,
   addContact,
 } from "./slices/contactsSlice";
-import { addConversation } from "./slices/conversationsSlice";
+import {
+  addConversation,
+  setConversations,
+  updateConversation,
+} from "./slices/conversationsSlice";
+import { addMessageToUser } from "./slices/messagesSlice";
 import {
   addSentRequest,
   addReceivedRequest,
@@ -52,8 +57,23 @@ export const registerSocketListeners = (socket, dispatch) => {
   });
 
   socket.on("getContactInfo", (data) => {
-    // console.log("getContactInfo", data.contact, data.contact.contact); 
+    // console.log("getContactInfo", data.contact, data.contact.contact);
     dispatch(addContact(data?.contact));
+  });
+
+  socket.on("receiveMessage", (data) => {
+    dispatch(
+      addMessageToUser({
+        id: data?.senderId,
+        message: data?.newMessage,
+      })
+    );
+    dispatch(
+      updateConversation({
+        convoId: data?.newMessage?.conversationId,
+        content: data?.newMessage?.content,
+      })
+    );
   });
 
   socket.on("error", (data) => {

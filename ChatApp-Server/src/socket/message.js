@@ -6,7 +6,9 @@ export const setupMessageHandlers = (io, socket) => {
   socket.on("sendMessage", async (data) => {
     try {
       const { conversationId, senderId, content, recSocketId } = data;
-    
+      console.log("hi there");
+      
+      
       const newMessage = await prisma. messages.create({
         data: {
           conversationId: conversationId,
@@ -23,11 +25,13 @@ export const setupMessageHandlers = (io, socket) => {
           lastMessage: content,
         },
       });
-
+      console.log(senderId, recSocketId);
+      
       socket.emit("sendMessageAck",{success: true, message: "Message sent successfully", newMessage: newMessage});
-      socket.to(recSocketId).emit("receiveMessage", {success: true, message: "Message sent successfully", newMessage: newMessage});
+      socket.to(recSocketId).emit("receiveMessage", {success: true, message: "Message sent successfully", newMessage: newMessage, senderId: senderId});
 
     } catch (error) {
+      console.log("error in setupMessageHandlers", error);
       
     }
   });
