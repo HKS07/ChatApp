@@ -2,7 +2,6 @@
   "name": "chatapp",
   "version": "1.0.0",
   "description": "A Chat application.",
-  "main": "index.js",
   "scripts": {
     "test": "jest"
   },
