@@ -6,8 +6,6 @@ export const setupMessageHandlers = (io, socket) => {
   socket.on("sendMessage", async (data) => {
     try {
       const { conversationId, senderId, content, recSocketId } = data;
-      console.log("hi there");
-      
       
       const newMessage = await prisma. messages.create({
         data: {
