@@ -14,6 +14,8 @@ model Profiles {
   status         String?
   profileUrl     String?
   email          String?  @unique
+  password       String?  
+  type           String   
   contacts       String[] @db.ObjectId
   conversationId String[] @db.ObjectId
   requests       String[] @db.ObjectId
