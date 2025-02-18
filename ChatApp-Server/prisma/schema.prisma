@@ -15,7 +15,9 @@ model Profiles {
   profileUrl     String?
   email          String?  @unique
   password       String?  
+  expiresAt      DateTime?
   type           String   
+  access         String @default("user")
   contacts       String[] @db.ObjectId
   conversationId String[] @db.ObjectId
   requests       String[] @db.ObjectId
